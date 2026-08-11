@@ -1,22 +1,25 @@
-# Dados B3 — servidor MCP
+# Dados B3 — servidor MCP (bolsa brasileira, fundamentos auditáveis)
 
 Conector [MCP](https://modelcontextprotocol.io) que dá ao seu agente de IA
-(Claude, ChatGPT e outros) acesso a **dados fundamentalistas de 402 companhias
-abertas brasileiras (B3), de 2010 até hoje**, com **metodologia pública**:
-ROIC, ROE, margens, crescimento, dívida líquida/EBITDA e **múltiplos
-ponto-no-tempo** (P/L, P/VP, EV/EBITDA calculados com o preço do 1º pregão
-*após a publicação real do balanço* — sem look-ahead, próprio para backtest).
+(Claude, ChatGPT, Cursor e outros) acesso a **dados fundamentalistas de 400+
+companhias abertas brasileiras (B3) — inclusive bancos e seguradoras —, de 2010
+até hoje**, com **metodologia 100% pública**: ROE, ROIC, margens, crescimento,
+dívida líquida/EBITDA, **múltiplos ponto-no-tempo** (P/L, P/VP, EV/EBITDA com o
+preço do 1º pregão *após a publicação real do balanço* — sem look-ahead, próprio
+para backtest), **dividendos e dividend yield**, **scores prontos (Piotroski
+F-Score e Graham)** e **histórico de reapresentações de balanço**.
 
-Fonte dos dados: CVM (dados abertos, licença ODbL) e B3 (COTAHIST). Cada número
-carrega a conta CVM de origem; nenhum é publicado sem uma bateria de testes de
-invariantes passando. Produto e planos: **https://dados-b3.onrender.com**
+Fonte: CVM (dados abertos, ODbL) e B3 (COTAHIST). Cada número carrega a conta
+CVM de origem; **nada é publicado sem uma bateria de testes de invariantes
+passando** (o balanço fecha, a DRE fecha, o preço nunca antecede a publicação).
+Produto e planos: **https://dadosb3.com**
 
 ## Uso 1 — remoto (nada para instalar, recomendado)
 
 Adicione este conector remoto ao seu cliente de IA:
 
 ```
-https://dados-b3.onrender.com/mcp/
+https://dadosb3.com/mcp/
 ```
 
 No Claude: Configurações → Conectores → adicionar conector personalizado → cole a URL.
@@ -46,25 +49,39 @@ Config de exemplo para um cliente MCP local:
 
 | Ferramenta | O que faz | Grátis? |
 |---|---|---|
-| `listar_empresas` | 402 companhias (nome, CNPJ, ticker) | sim |
-| `indicadores_anuais` | ROIC, ROE, margens, crescimento, DL/EBITDA (16 anos) | WEGE3 sim; demais com chave |
+| `listar_empresas` | 400+ companhias, incl. bancos/seguradoras (nome, CNPJ, ticker) | sim |
+| `indicadores_anuais` | ROE, ROIC, margens, crescimento, DL/EBITDA (16 anos) | WEGE3 sim; demais com chave |
 | `multiplos` | P/L, P/VP, EV/EBITDA ponto-no-tempo; P/L TTM | WEGE3 sim; demais com chave |
-| `fatos_contabeis` | contas padronizadas com origem CVM (anual/trimestral) | WEGE3 sim; demais com chave |
+| `dividendos` | proventos, resumo anual e **dividend yield 12m** | WEGE3 sim; demais com chave |
+| `scores` | **Piotroski F-Score (0-9, cada critério aberto)** e critério de Graham | WEGE3 sim; demais com chave |
+| `reapresentacoes` | **balanços republicados** — versão antiga × nova lado a lado | WEGE3 sim; demais com chave |
+| `fatos_contabeis` | contas padronizadas com a conta CVM de origem (anual/trimestral) | WEGE3 sim; demais com chave |
+| `screener` | filtra as empresas por faixas de indicadores | com chave |
+| `dicionario` | fórmula, conta CVM e base do lucro de cada indicador (JSON) | sim |
 | `metodologia` | fórmulas públicas de cada indicador | sim |
 | `saude` | cobertura atual do banco | sim |
 
 A empresa **WEGE3** e a **metodologia** são abertas para degustação, sem chave.
-Para as demais empresas, crie uma **chave grátis** (200 consultas/dia, sem
-cartão) ou assine o **Pro** (R$ 49,90/mês) em https://dados-b3.onrender.com e
-passe a chave no argumento `chave_api` (ou na variável `DADOS_B3_API_KEY`).
+Para as demais, crie uma **chave grátis** (200 consultas/dia, sem cartão) ou
+assine o **Pro** (R$ 49,90/mês) em https://dadosb3.com e passe a chave no
+argumento `chave_api` (ou na variável `DADOS_B3_API_KEY`).
+
+## Bancos e seguradoras
+
+Instituições financeiras têm plano de contas próprio (não há EBIT nem receita de
+venda). O conector as classifica pelo plano de contas real e entrega os
+indicadores que fazem sentido — **ROE, margem, crescimento, P/L, P/VP,
+dividendos** — e **não** publica ROIC/EBITDA/EV-EBITDA para elas (não se
+aplicam). Ex.: Itaú, Bradesco, Banco do Brasil, BB Seguridade, IRB.
 
 ## Por que este e não outro
 
 Metodologia 100% pública, testes de invariantes antes de cada publicação,
-múltiplos sem vazamento de informação futura, e histórico de reapresentações
-registrado — coisas que nenhuma API de dados da B3 fazia. Comparativo honesto
-(inclusive onde os concorrentes são melhores):
-https://dados-b3.onrender.com/comparativo
+múltiplos sem vazamento de informação futura, e **histórico de reapresentações
+registrado** (quando a empresa republica um balanço, as duas versões ficam
+lado a lado) — coisas que nenhuma outra API de dados da B3 faz. Comparativo
+honesto, inclusive onde os concorrentes são melhores:
+**https://dadosb3.com/comparativo**
 
 ## Licença
 

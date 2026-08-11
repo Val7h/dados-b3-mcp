@@ -2,8 +2,8 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Val7h/dados-b3",
   "title": "Dados B3",
-  "description": "Brazilian stock market (B3) fundamentals: ROIC, ROE, margins, multiples. Public methodology.",
-  "version": "1.0.0",
+  "description": "Brazilian stock (B3) fundamentals: ratios, multiples, dividends, scores. Public methodology.",
+  "version": "1.1.0",
   "repository": {
     "url": "https://github.com/Val7h/dados-b3-mcp",
     "source": "github"
@@ -11,7 +11,7 @@
   "remotes": [
     {
       "type": "streamable-http",
-      "url": "https://dados-b3.onrender.com/mcp/"
+      "url": "https://dadosb3.com/mcp/"
     }
   ]
 }
