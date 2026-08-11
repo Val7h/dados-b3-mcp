@@ -3,7 +3,7 @@
 Duas formas de usar:
 
 1. REMOTO (recomendado, nada para instalar): adicione o conector
-   https://dados-b3.onrender.com/mcp/ ao seu cliente de IA (Claude, etc.).
+   https://dadosb3.com/mcp/ ao seu cliente de IA (Claude, etc.).
 
 2. LOCAL (este arquivo): um servidor MCP stdio que chama a API pública do
    Dados B3 por HTTP. Útil para embutir em fluxos locais.
@@ -12,7 +12,7 @@ As ferramentas expõem dados fundamentalistas de 402 companhias abertas
 brasileiras (2010–hoje) com metodologia pública. A empresa WEGE3 e a
 metodologia são gratuitas (degustação); as demais empresas exigem uma chave
 (grátis ou Pro) passada no argumento `chave_api`. Detalhes e planos em
-https://dados-b3.onrender.com.
+https://dadosb3.com.
 """
 
 from __future__ import annotations
@@ -22,7 +22,7 @@ import os
 import httpx
 from mcp.server.fastmcp import FastMCP
 
-API = os.environ.get("DADOS_B3_API", "https://dados-b3.onrender.com")
+API = os.environ.get("DADOS_B3_API", "https://dadosb3.com")
 CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 
 mcp = FastMCP("dados-b3")
