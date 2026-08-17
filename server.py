@@ -8,8 +8,10 @@ Duas formas de usar:
 2. LOCAL (este arquivo): um servidor MCP stdio que chama a API pública do
    Dados B3 por HTTP. Útil para embutir em fluxos locais.
 
-As ferramentas expõem dados fundamentalistas de 402 companhias abertas
-brasileiras (2010–hoje) com metodologia pública. A empresa WEGE3 e a
+As ferramentas expõem dados fundamentalistas das companhias abertas
+brasileiras (2010–hoje) com metodologia pública. O universo cresce quando a
+CVM publica — por isso nenhuma contagem fica escrita aqui: quem quiser o
+número de hoje chama `saude`. A empresa WEGE3 e a
 metodologia são gratuitas (degustação); as demais empresas exigem uma chave
 (grátis ou Pro) passada no argumento `chave_api`. Detalhes e planos em
 https://dadosb3.com.
@@ -44,7 +46,9 @@ def _get(caminho: str, chave_api: str = "") -> dict:
 
 @mcp.tool()
 def listar_empresas() -> dict:
-    """Lista as 402 companhias abertas brasileiras disponíveis. Gratuito."""
+    """Lista as companhias abertas brasileiras disponíveis, com nome, CNPJ e
+    ticker. A contagem vem na resposta — não fica congelada nesta descrição,
+    que é lida por clientes de IA e envelheceria sem ninguém ver. Gratuito."""
     return _get("/empresas")
 
 
