@@ -1,0 +1,48 @@
+# Publica a imagem do servidor MCP no GHCR a cada push na main.
+#
+# POR QUE ISTO EXISTE: o server.json declarava apenas `remotes`, ou seja, nada
+# que um diretório consiga INSTALAR e rodar. O Glama, que é quem dá a nota de
+# qualidade exigida pelo robô do awesome-mcp-servers, mostrava "This server
+# cannot be installed" e a nota ficava em "not tested" — travando o PR #11932
+# sem que houvesse nada errado com o servidor (ele sobe e lista 6 ferramentas).
+#
+# Com uma imagem pública, o servidor passa a ser instalável de fato: o
+# diretório roda, introspecta as ferramentas e pontua. E quem quiser embutir o
+# conector localmente tem um caminho de um comando só.
+name: publicar imagem
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  publicar:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Entrar no GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Ler a versão do server.json
+        id: versao
+        run: echo "v=$(python -c "import json;print(json.load(open('server.json'))['version'])")" >> "$GITHUB_OUTPUT"
+
+      # A imagem é minúscula (python-slim + duas libs), então não vale a pena
+      # complicar com cache ou multi-arquitetura por ora.
+      - name: Construir e publicar
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/val7h/dados-b3-mcp:latest
+            ghcr.io/val7h/dados-b3-mcp:${{ steps.versao.outputs.v }}

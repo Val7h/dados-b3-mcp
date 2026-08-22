@@ -45,6 +45,29 @@ Config de exemplo para um cliente MCP local:
 }
 ```
 
+## Uso 3 — imagem Docker (um comando, sem Python local)
+
+```bash
+docker run -i --rm -e DADOS_B3_API_KEY=sua_chave_opcional ghcr.io/val7h/dados-b3-mcp:latest
+```
+
+```json
+{
+  "mcpServers": {
+    "dados-b3": {
+      "command": "docker",
+      "args": ["run", "-i", "--rm", "ghcr.io/val7h/dados-b3-mcp:latest"]
+    }
+  }
+}
+```
+
+A imagem é publicada automaticamente a cada push na `main`
+(`.github/workflows/publicar-imagem.yml`). Ela existe por dois motivos: dar um
+caminho de instalação de um comando só, e permitir que diretórios de MCP rodem
+o servidor para avaliá-lo — sem um pacote instalável declarado, eles não
+conseguem sequer iniciá-lo.
+
 ## Ferramentas
 
 | Ferramenta | O que faz | Grátis? |

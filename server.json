@@ -13,5 +13,23 @@
       "type": "streamable-http",
       "url": "https://dadosb3.com/mcp/"
     }
+  ],
+  "packages": [
+    {
+      "registryType": "oci",
+      "identifier": "ghcr.io/val7h/dados-b3-mcp",
+      "version": "1.1.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "DADOS_B3_API_KEY",
+          "description": "Chave de API do Dados B3 (opcional: WEGE3 e a metodologia sao gratuitas sem chave). Crie a sua em https://dadosb3.com",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
   ]
 }
