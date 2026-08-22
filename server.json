@@ -3,7 +3,7 @@
   "name": "io.github.Val7h/dados-b3",
   "title": "Dados B3",
   "description": "Brazilian stock (B3) fundamentals: ratios, multiples, dividends, scores. Public methodology.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "repository": {
     "url": "https://github.com/Val7h/dados-b3-mcp",
     "source": "github"
@@ -18,14 +18,14 @@
     {
       "registryType": "oci",
       "identifier": "ghcr.io/val7h/dados-b3-mcp",
-      "version": "1.1.0",
+      "version": "1.2.0",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "DADOS_B3_API_KEY",
-          "description": "Chave de API do Dados B3 (opcional: WEGE3 e a metodologia sao gratuitas sem chave). Crie a sua em https://dadosb3.com",
+          "description": "Dados B3 API key. Optional: WEGE3 and the whole methodology are free without one. Create a free key (200 queries/day, no card) or subscribe at https://dadosb3.com.",
           "isRequired": false,
           "isSecret": true
         }
