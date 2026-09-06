@@ -32,18 +32,24 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.2.0"
+VERSAO = "1.3.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
 
 
-def _get(caminho: str, chave_api: str = "") -> dict:
-    headers = {}
+def _get(caminho: str, chave_api: str = "", **params) -> dict:
+    # ★ ACCEPT EXPLÍCITO (06/09/2026). Várias rotas do Dados B3 servem PÁGINA e
+    # JSON pela mesma URL, e o padrão delas é a página — de propósito, para que
+    # buscador e IA que batem com `*/*` não recebam 401 nem HTML vazio. Este
+    # cliente é um consumidor de JSON e precisa DIZER isso; sem o cabeçalho, o
+    # httpx manda `*/*` e nós recebíamos HTML para depois quebrar no `.json()`.
+    headers = {"Accept": "application/json"}
     k = chave_api or CHAVE
     if k:
         headers["X-API-Key"] = k
-    r = httpx.get(f"{API}{caminho}", headers=headers, timeout=30)
+    r = httpx.get(f"{API}{caminho}", headers=headers, timeout=30,
+                  params={k_: v for k_, v in params.items() if v not in (None, "", 0)})
     if r.status_code == 401:
         return {"erro": "chave de API ausente ou inativa",
                 "como_resolver": f"Crie uma chave grátis ou assine em {API}/assinar "
@@ -257,6 +263,101 @@ def metodologia(nome: str = "") -> dict:
         return _get("/metodologia")
     return {"nome": nome, "conteudo": httpx.get(
         f"{API}/metodologia/{nome}.md", timeout=30).text}
+
+
+@mcp.tool()
+def trimestres(ticker: str, chave_api: str = "") -> dict:
+    """Série TRIMESTRAL de uma empresa da B3: contas da ITR, preço e indicadores.
+
+    Use quando a pergunta for sobre o ANO CORRENTE ou sobre o trimestre mais
+    recente — "como foi o 2T", "a margem melhorou este ano?". A série anual só
+    responde depois que o exercício fecha, e fica até um ano defasada.
+
+    Devolve, por trimestre: as contas publicadas na ITR (receita, resultado
+    bruto, EBIT, lucro, PL, ativo...), o preço do 1º pregão a partir da
+    publicação daquela ITR, P/L TTM e P/VP, e os indicadores margem_bruta,
+    margem_ebit, margem_liquida e roe_ttm no mesmo formato da série anual.
+
+    O 4º TRIMESTRE NÃO VEM, e isso é escolha: a ITR publica 1T, 2T e 3T; o
+    exercício fechado é da DFP. É possível derivar `4T = anual − 9M` (há quem
+    derive), e não derivamos — número calculado por nós não entra na mesma
+    lista dos que a companhia reportou. Para o ano fechado use
+    `indicadores_anuais`.
+
+    Instituição financeira (banco/seguradora) recebe só margem líquida e
+    roe_ttm: não há resultado bruto nem EBIT nesse plano de contas.
+
+    Parâmetros:
+      ticker — código da ação na B3, em maiúsculas. Ex.: "WEGE3", "PETR4".
+      chave_api — chave do Dados B3. Dispensável para WEGE3."""
+    return _get(f"/empresas/{ticker}/trimestres", chave_api)
+
+
+@mcp.tool()
+def fii(ticker: str, chave_api: str = "") -> dict:
+    """Um fundo imobiliário (FII) da B3, com o histórico auditável.
+
+    Devolve o cadastro (CNPJ, segmento, mandato, tipo de gestão, público-alvo),
+    a série de P/VP ponto-no-tempo (preço do 1º pregão a partir da entrega do
+    informe mensal ÷ valor patrimonial da cota), o dividend yield de 12 meses,
+    a vacância quando é fundo de tijolo, e os rendimentos recentes.
+
+    Rendimento de FII é DISTRIBUIÇÃO DE CAIXA, não lucro — um yield alto pode
+    ser devolução de capital ou ganho não recorrente. O dado vem dos informes
+    mensais entregues à CVM, não de agregador.
+
+    Parâmetros:
+      ticker — código do fundo na B3. Ex.: "MXRF11", "HGLG11".
+      chave_api — chave do Dados B3. MXRF11 é aberto como degustação."""
+    return _get(f"/fiis/{ticker}", chave_api)
+
+
+@mcp.tool()
+def fiis(pvp_min: float = 0, pvp_max: float = 0, dy_min: float = 0,
+         dy_max: float = 0, segmento: str = "", cotistas_min: int = 0,
+         limite: int = 0, chave_api: str = "") -> dict:
+    """Filtra os fundos imobiliários por faixas de P/VP e dividend yield.
+
+    Todos os parâmetros são opcionais; sem nenhum, devolve o universo ordenado.
+
+    Parâmetros:
+      pvp_min / pvp_max — faixa de P/VP. Ex.: pvp_max=1.0 para fundos abaixo do
+        valor patrimonial.
+      dy_min / dy_max — faixa de dividend yield de 12 meses, em FRAÇÃO:
+        dy_min=0.10 significa 10% ao ano, não 10.
+      segmento — segmento CVM, casando exato (sem caixa). Ex.: "Shoppings".
+      cotistas_min — piso de cotistas, para tirar fundo ilíquido. Padrão 5000.
+      limite — quantos devolver (padrão 50, teto 200).
+      chave_api — obrigatória: o filtro varre o universo inteiro, não há
+        degustação possível.
+
+    Só entra número LIMPO: um P/VP ou DY marcado com flag não é tratado como
+    valor filtrável, e o fundo simplesmente não casa aquele filtro — em vez de
+    entrar na lista com um número em que nós mesmos não confiamos. Não é
+    recomendação de investimento."""
+    return _get("/fiis/screener", chave_api, pvp_min=pvp_min, pvp_max=pvp_max,
+                dy_min=dy_min, dy_max=dy_max, segmento=segmento,
+                cotistas_min=cotistas_min, limite=limite)
+
+
+@mcp.tool()
+def hoje() -> dict:
+    """O que mudou no mercado brasileiro nos últimos 30 dias.
+
+    Responde "o que aconteceu com a empresa X esta semana" — a pergunta que
+    nenhuma série anual responde. Devolve, na janela: os balanços que ficaram
+    públicos (com a data de entrega à CVM), os documentos REENVIADOS (versão
+    maior que 1: a companhia republicou o que já tinha entregue), os proventos
+    de ações aprovados, os rendimentos e informes de FII, os eventos
+    societários (grupamento, desdobramento, bonificação) e as trocas de ticker.
+
+    Cada seção declara `dados_ate`: a data máxima daquela FONTE. As defasagens
+    são diferentes — a CVM entrega documento com dias de atraso, a B3 publica
+    rendimento de FII quase no dia — e a janela é fixa a partir de hoje, então
+    uma fonte parada aparece como parada em vez de parecer recente.
+
+    Sem parâmetros. Gratuito — não exige chave."""
+    return _get("/hoje")
 
 
 @mcp.tool()

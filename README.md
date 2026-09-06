@@ -81,10 +81,21 @@ in order to evaluate it.
 | `dividendos` | Cash distributions, annual summary and 12-month dividend yield | WEGE3 yes; others need a key |
 | `scores` | Piotroski F-Score with all nine criteria shown, plus the Graham test | WEGE3 yes; others need a key |
 | `reapresentacoes` | Restated filings — the original and the revised figure side by side | WEGE3 yes; others need a key |
+| `trimestres` | Quarterly series: Q1/Q2/Q3 accounts as filed, the quarter's price, margins and trailing ROE | WEGE3 yes; others need a key |
+| `hoje` | What changed in the last 30 days: filings published, filings **re-sent**, dividends, fund distributions, corporate actions, ticker changes | yes |
+| `fii` | One real-estate fund: point-in-time P/B, 12-month yield, vacancy, recent distributions | MXRF11 yes; others need a key |
+| `fiis` | Filters funds by P/B and dividend-yield ranges | key required |
 | `screener` | Filters the whole market by indicator ranges | key required |
 | `dicionario` | Formula, CVM accounts and earnings base of each indicator, as JSON | yes |
 | `metodologia` | The published methodology pages, as text | yes |
 | `saude` | Current coverage and last ingestion | yes |
+
+`trimestres` stops at Q3 on purpose. The interim filing (ITR) never carries a
+standalone fourth quarter — it can be derived as `full year − nine months`, and
+some do derive it. We do not: a figure we computed would sit in the same list as
+the figures the company reported, carrying the error of two filings and erasing
+the line between what was filed and what we calculated. For the closed year, ask
+for the annual series.
 
 **WEGE3** and the **whole methodology** are open, no key needed. For other
 companies, create a **free key** (200 queries/day, no card) or subscribe to
@@ -174,10 +185,20 @@ o servidor para avaliá-lo.
 | `dividendos` | Proventos, resumo anual e dividend yield de 12 meses | WEGE3 sim; demais com chave |
 | `scores` | Piotroski F-Score com os nove critérios abertos, e o critério de Graham | WEGE3 sim; demais com chave |
 | `reapresentacoes` | Balanços republicados — versão original e revisada lado a lado | WEGE3 sim; demais com chave |
+| `trimestres` | Série trimestral: contas do 1T/2T/3T como publicadas, preço do trimestre, margens e ROE TTM | WEGE3 sim; demais com chave |
+| `hoje` | O que mudou nos últimos 30 dias: balanços publicados, balanços **reenviados**, proventos, rendimentos de FII, eventos societários, trocas de ticker | sim |
+| `fii` | Um fundo imobiliário: P/VP ponto-no-tempo, DY de 12 meses, vacância, rendimentos recentes | MXRF11 sim; demais com chave |
+| `fiis` | Filtra fundos por faixas de P/VP e dividend yield | exige chave |
 | `screener` | Filtra o mercado inteiro por faixas de indicadores | exige chave |
 | `dicionario` | Fórmula, contas CVM e base do lucro de cada indicador, em JSON | sim |
 | `metodologia` | As páginas de metodologia publicadas, em texto | sim |
 | `saude` | Cobertura atual e última ingestão | sim |
+
+`trimestres` para no 3T de propósito. A ITR nunca traz o 4º trimestre isolado —
+ele sai de `exercício cheio − 9 meses`, e há quem derive. Nós não: um número
+calculado por nós entraria na MESMA lista dos que a companhia reportou,
+carregando o erro de dois arquivos e apagando a fronteira entre "foi publicado"
+e "nós calculamos". Para o ano fechado, peça a série anual.
 
 A empresa **WEGE3** e a **metodologia** são abertas para degustação, sem chave.
 Para as demais, crie uma **chave grátis** (200 consultas/dia, sem cartão) ou
