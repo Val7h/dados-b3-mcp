@@ -7,8 +7,8 @@ An [MCP](https://modelcontextprotocol.io) connector that gives your AI agent
 listed companies (B3) — banks and insurers included — from 2010 to today**,
 with a **fully published methodology**: ROE, ROIC, margins, growth, net
 debt/EBITDA, **point-in-time multiples** (P/E, P/B, EV/EBITDA priced at the
-first trading session *after* the filing actually became public — no
-look-ahead, usable for backtests), **dividends and dividend yield**,
+first trading session *on or after* the day the filing actually became
+public — no look-ahead, usable for backtests), **dividends and dividend yield**,
 **ready-made scores (Piotroski F-Score and Graham)** and a **record of restated
 filings**.
 
@@ -126,7 +126,7 @@ Conector [MCP](https://modelcontextprotocol.io) que dá ao seu agente de IA
 companhias abertas brasileiras (B3) — inclusive bancos e seguradoras —, de 2010
 até hoje**, com **metodologia 100% pública**: ROE, ROIC, margens, crescimento,
 dívida líquida/EBITDA, **múltiplos ponto-no-tempo** (P/L, P/VP, EV/EBITDA com o
-preço do 1º pregão *após a publicação real do balanço* — sem look-ahead,
+preço do 1º pregão *a partir da publicação real do balanço* — sem look-ahead,
 próprio para backtest), **dividendos e dividend yield**, **scores prontos
 (Piotroski F-Score e Graham)** e **histórico de reapresentações de balanço**.
 

@@ -94,9 +94,9 @@ def multiplos(ticker: str, chave_api: str = "") -> dict:
 
     Devolve P/L, P/VP e EV/EBITDA por exercício, mais P/L TTM por trimestre.
 
-    O preço usado é o do primeiro pregão APÓS a data real de publicação do
-    balanço — não o fechamento do exercício, que ninguém conhecia naquela
-    data. É essa escolha que elimina o look-ahead e permite usar a série em
+    O preço usado é o do primeiro pregão A PARTIR da data real de publicação
+    do balanço (na maioria dos casos, o próprio dia da entrega) — não o
+    fechamento do exercício, que ninguém conhecia naquela data. É essa escolha que elimina o look-ahead e permite usar a série em
     backtest sem contaminar o passado.
 
     Parâmetros:
