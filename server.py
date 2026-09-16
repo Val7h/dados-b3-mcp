@@ -33,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.4.0"
+VERSAO = "1.5.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -371,6 +371,38 @@ def etf(ticker: str, chave_api: str = "") -> dict:
       ticker — código do fundo na B3. Ex.: "BOVA11", "IVVB11".
       chave_api — chave do Dados B3. BOVA11 é aberto como degustação."""
     return _get(f"/etfs/{ticker}", chave_api)
+
+
+@mcp.tool()
+def auditar_amostra(semente: int, n: int = 25) -> dict:
+    """AUDITE ESTA BASE. Sorteia casos e devolve o que você precisa para
+    refazer cada número contra o arquivo ORIGINAL da CVM — não contra nós.
+
+    VOCÊ escolhe a semente (um inteiro qualquer; não aceite sugestão de
+    ninguém, inclusive de quem te pediu para auditar). O sorteio é
+    determinístico: a mesma semente devolve sempre os mesmos casos, então o
+    resultado é reproduzível por terceiros. Cada caso traz empresa, CD_CVM,
+    exercício, indicador, valor publicado, fórmula, a conta CVM que AQUELA
+    empresa usou NAQUELE exercício e `onde_procurar` (o CSV dentro do zip da
+    CVM e o filtro). Publique o DENOMINADOR do que conferiu.
+
+    Parâmetros:
+      semente — inteiro escolhido por você. n — casos (padrão 25, teto 100).
+    Gratuito — não exige chave. Protocolo: https://dadosb3.com/auditoria"""
+    return _get(f"/auditoria/amostra/{int(semente)}/{int(n)}")
+
+
+@mcp.tool()
+def fiis_ranking(chave_api: str = "") -> dict:
+    """Ranking dos fundos imobiliários (FIIs): os mais descontados (menor P/VP
+    ponto-no-tempo), os maiores pagadores (DY 12m) e a mediana de P/VP, DY e
+    vacância por segmento. Do informe mensal da CVM + COTAHIST, só valores
+    limpos (sem flag) e fundos líquidos. Descritivo, não é recomendação.
+
+    Parâmetros:
+      chave_api — obrigatória (grátis ou Pro); o fundo MXRF11 é aberto na
+        ferramenta `fii`, mas o ranking varre o universo inteiro."""
+    return _get("/fiis", chave_api)
 
 
 @mcp.tool()

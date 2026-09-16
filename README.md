@@ -84,6 +84,8 @@ in order to evaluate it.
 | `trimestres` | Quarterly series: Q1/Q2/Q3 accounts as filed, the quarter's price, margins and trailing ROE | WEGE3 yes; others need a key |
 | `etfs_ranking` | B3 ETFs: most traded, largest net assets, largest premium/discount to same-day NAV, 12m NAV return, lowest EFFECTIVE fee | yes |
 | `etf` | One ETF: daily NAV (FNET filing), premium/discount, monthly effective fee, portfolio (CDA) and overlap with peers | BOVA11 yes; others need a key |
+| `auditar_amostra` | Draws cases with YOUR seed so you can recompute each figure against the CVM file (formula, account, where to look) | yes |
+| `fiis_ranking` | Most discounted FIIs (point-in-time P/B), highest 12m yield and medians by segment | needs a key |
 | `hoje` | What changed in the last 30 days: filings published, filings **re-sent**, dividends, fund distributions, corporate actions, ticker changes | yes |
 | `fii` | One real-estate fund: point-in-time P/B, 12-month yield, vacancy, recent distributions | MXRF11 yes; others need a key |
 | `fiis` | Filters funds by P/B and dividend-yield ranges | key required |
@@ -190,6 +192,8 @@ o servidor para avaliá-lo.
 | `trimestres` | Série trimestral: contas do 1T/2T/3T como publicadas, preço do trimestre, margens e ROE TTM | WEGE3 sim; demais com chave |
 | `etfs_ranking` | ETFs da B3: mais negociados, maior patrimônio, maior ágio/deságio sobre a cota do dia, retorno 12m pela cota, menor taxa EFETIVA | sim |
 | `etf` | Um ETF: cota diária (FNET), ágio/deságio, taxa efetiva mês a mês, carteira (CDA) e sobreposição com pares | BOVA11 sim; demais com chave |
+| `auditar_amostra` | Sorteia casos com a SUA semente para refazer cada número contra o arquivo da CVM (fórmula, conta, onde procurar) | sim |
+| `fiis_ranking` | FIIs mais descontados (P/VP ponto-no-tempo), maiores DY 12m e mediana por segmento | exige chave |
 | `hoje` | O que mudou nos últimos 30 dias: balanços publicados, balanços **reenviados**, proventos, rendimentos de FII, eventos societários, trocas de ticker | sim |
 | `fii` | Um fundo imobiliário: P/VP ponto-no-tempo, DY de 12 meses, vacância, rendimentos recentes | MXRF11 sim; demais com chave |
 | `fiis` | Filtra fundos por faixas de P/VP e dividend yield | exige chave |
