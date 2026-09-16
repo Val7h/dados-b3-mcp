@@ -9,7 +9,8 @@ Duas formas de usar:
    Dados B3 por HTTP. Útil para embutir em fluxos locais.
 
 As ferramentas expõem dados fundamentalistas das companhias abertas
-brasileiras (2010–hoje) com metodologia pública. O universo cresce quando a
+brasileiras (2010–hoje), dos fundos imobiliários e dos ETFs, com metodologia
+pública. O universo cresce quando a
 CVM publica — por isso nenhuma contagem fica escrita aqui: quem quiser o
 número de hoje chama `saude`. A empresa WEGE3 e a
 metodologia são gratuitas (degustação); as demais empresas exigem uma chave
@@ -32,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.3.0"
+VERSAO = "1.4.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -338,6 +339,38 @@ def fiis(pvp_min: float = 0, pvp_max: float = 0, dy_min: float = 0,
     return _get("/fiis/screener", chave_api, pvp_min=pvp_min, pvp_max=pvp_max,
                 dy_min=dy_min, dy_max=dy_max, segmento=segmento,
                 cotistas_min=cotistas_min, limite=limite)
+
+
+@mcp.tool()
+def etfs_ranking() -> dict:
+    """ETFs listados na B3: mais negociados, maior patrimônio, maior deságio e
+    maior ágio sobre a cota (preço ÷ cota patrimonial do MESMO dia), retorno
+    de 12 meses pela cota e menor taxa EFETIVA (despesa do balancete ÷ PL
+    médio, anualizada — a taxa nominal não existe em fonte pública).
+
+    Cota, patrimônio e cotistas vêm do informe diário que o administrador
+    entrega ao FNET; a carteira vem do CDA mensal da CVM; o índice é inferido
+    do NOME do fundo. Só ETF líquido (> R$ 1 mi/dia) entra em ágio, retorno e
+    taxa. Descritivo, não é recomendação.
+
+    Sem parâmetros. Gratuito — não exige chave."""
+    return _get("/etfs")
+
+
+@mcp.tool()
+def etf(ticker: str, chave_api: str = "") -> dict:
+    """Um ETF da B3: cadastro (CVM + B3), último informe diário (cota,
+    patrimônio, cotistas), ágio/deságio dos últimos 30 pregões, taxa efetiva
+    mês a mês, carteira mais recente (10 maiores posições) e sobreposição com
+    ETFs do mesmo índice, retornos pela cota e pelo preço.
+
+    Retorno pela COTA é retorno total por construção (o ETF reinveste). O
+    preço de tela pode descolar da cota — o ágio diz quanto.
+
+    Parâmetros:
+      ticker — código do fundo na B3. Ex.: "BOVA11", "IVVB11".
+      chave_api — chave do Dados B3. BOVA11 é aberto como degustação."""
+    return _get(f"/etfs/{ticker}", chave_api)
 
 
 @mcp.tool()
