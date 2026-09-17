@@ -127,6 +127,11 @@ kept on the record** — when a company republishes a filing, both versions stay
 side by side. An honest comparison, including where competitors are better:
 **https://dadosb3.com/comparativo**
 
+## Prefer plain Python?
+
+`pip install dadosb3` — the official client for the same API, with typed
+errors and one method per tool: <https://pypi.org/project/dadosb3/>
+
 ## Licence
 
 MIT (this connector). The underlying data is public (CVM/B3); the service adds
@@ -177,6 +182,11 @@ docker run -i --rm -e DADOS_B3_API_KEY=sua_chave_opcional ghcr.io/val7h/dados-b3
 A imagem é publicada a cada push na `main`. Ela existe por dois motivos: dar um
 caminho de instalação de um comando só, e permitir que diretórios de MCP rodem
 o servidor para avaliá-lo.
+
+## Prefere Python puro?
+
+`pip install dadosb3` — o cliente oficial da mesma API, com erros tratados e
+um método por ferramenta: <https://pypi.org/project/dadosb3/>
 
 ## Ferramentas
 
