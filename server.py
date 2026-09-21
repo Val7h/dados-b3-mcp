@@ -33,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.5.0"
+VERSAO = "1.6.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -197,7 +197,7 @@ def reapresentacoes(ticker: str, chave_api: str = "") -> dict:
 
 @mcp.tool()
 def screener(filtros: dict[str, float] | None = None, ano: int = 0,
-             limite: int = 100, chave_api: str = "") -> dict:
+             as_of: str = "", limite: int = 100, chave_api: str = "") -> dict:
     """Filtra o universo inteiro da B3 por faixas de indicadores.
 
     Parâmetros:
@@ -212,6 +212,12 @@ def screener(filtros: dict[str, float] | None = None, ano: int = 0,
         válidos e exemplos de uso.
       ano — exercício alvo. 0 (padrão) usa, para cada empresa, o último ano
         com dado disponível — que não é o mesmo ano para todas.
+      as_of — data "AAAA-MM-DD". Responde outra pergunta: o que estava
+        PÚBLICO naquele dia (balanço já recebido pela CVM, em média ~100 dias
+        depois do fim do exercício). Use em pesquisa, para não olhar o futuro;
+        cada empresa traz `disponivel_em`. Não combina com `ano`. O universo
+        continua o das companhias ativas hoje (viés de sobrevivência, dito na
+        resposta).
       limite — máximo de empresas na resposta. Padrão 100.
       chave_api — obrigatória aqui, mesmo para WEGE3, porque a consulta
         percorre todo o universo. Deixe "" para usar DADOS_B3_API_KEY.
@@ -225,6 +231,8 @@ def screener(filtros: dict[str, float] | None = None, ano: int = 0,
         q.append(f"{chave}={valor}")
     if ano:
         q.append(f"ano={ano}")
+    if as_of:
+        q.append(f"as_of={as_of}")
     q.append(f"limite={limite}")
     return _get("/screener?" + "&".join(q), chave_api)
 
