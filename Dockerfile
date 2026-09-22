@@ -3,6 +3,8 @@
 # e por quem quiser embutir o conector localmente. O uso RECOMENDADO é o
 # conector remoto https://dadosb3.com/mcp/ (nada para instalar).
 FROM python:3.12-slim
+# exigida pelo registro oficial de MCP para provar a posse da imagem
+LABEL io.modelcontextprotocol.server.name="io.github.Val7h/dados-b3"
 
 WORKDIR /app
 
