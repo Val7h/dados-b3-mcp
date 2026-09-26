@@ -17,7 +17,7 @@ account it came from, and **nothing is published unless a suite of invariant
 tests passes** — the balance sheet balances, the income statement reconciles,
 and a price never precedes the filing that justifies it.
 
-Product and plans: **https://dadosb3.com**
+Product and plans: **https://dadosb3.com/?de=github**
 
 ## Use 1 — remote (nothing to install, recommended)
 
@@ -89,7 +89,9 @@ in order to evaluate it.
 | `hoje` | What changed in the last 30 days: filings published, filings **re-sent**, dividends, fund distributions, corporate actions, ticker changes | yes |
 | `fii` | One real-estate fund: point-in-time P/B, 12-month yield, vacancy, recent distributions | MXRF11 yes; others need a key |
 | `fiis` | Filters funds by P/B and dividend-yield ranges | key required |
-| `screener` | Filters the whole market by indicator ranges | key required |
+| `screener` | Filters the whole market by indicator ranges; `as_of` answers what was PUBLIC on a date (no look-ahead); `recibo=True` freezes the answer at a permanent, citable address | key required |
+| `recibo` | Reads a frozen screener query: question, cut-off date, data version, result and its sha256 | yes |
+| `veredito` | Descriptive summary of one stock: six numbers in three questions, each with its numeric band and comparison (sector median, the company's own history, the whole market), plus the data confidence flag — facts, never advice | yes, any stock |
 | `dicionario` | Formula, CVM accounts and earnings base of each indicator, as JSON | yes |
 | `metodologia` | The published methodology pages, as text | yes |
 | `saude` | Current coverage and last ingestion | yes |
@@ -102,8 +104,9 @@ the line between what was filed and what we calculated. For the closed year, ask
 for the annual series.
 
 **WEGE3** and the **whole methodology** are open, no key needed. For other
-companies, create a **free key** (200 queries/day, no card) or subscribe to
-**Pro** at https://dadosb3.com, and pass it in the `chave_api` argument or the
+companies, create a **free key** at https://dadosb3.com/chave-gratis?de=github
+(200 queries/day, no card) or subscribe to **Pro** at
+https://dadosb3.com/assinar?de=github, and pass it in the `chave_api` argument or the
 `DADOS_B3_API_KEY` environment variable.
 
 The company count is deliberately not written here: the universe grows whenever
@@ -125,7 +128,7 @@ A methodology published rather than described, invariant tests gating every
 release, multiples with no future information leaking in, and **restatements
 kept on the record** — when a company republishes a filing, both versions stay
 side by side. An honest comparison, including where competitors are better:
-**https://dadosb3.com/comparativo**
+**https://dadosb3.com/comparativo?de=github**
 
 ## Prefer plain Python?
 
@@ -154,7 +157,7 @@ Fonte: CVM (dados abertos, ODbL) e B3 (COTAHIST). Cada número carrega a conta
 CVM de origem; **nada é publicado sem uma bateria de testes de invariantes
 passando** (o balanço fecha, a DRE fecha, o preço nunca antecede a publicação).
 
-Produto e planos: **https://dadosb3.com**
+Produto e planos: **https://dadosb3.com/?de=github**
 
 ## Uso 1 — remoto (nada para instalar, recomendado)
 
@@ -207,7 +210,9 @@ um método por ferramenta: <https://pypi.org/project/dadosb3/>
 | `hoje` | O que mudou nos últimos 30 dias: balanços publicados, balanços **reenviados**, proventos, rendimentos de FII, eventos societários, trocas de ticker | sim |
 | `fii` | Um fundo imobiliário: P/VP ponto-no-tempo, DY de 12 meses, vacância, rendimentos recentes | MXRF11 sim; demais com chave |
 | `fiis` | Filtra fundos por faixas de P/VP e dividend yield | exige chave |
-| `screener` | Filtra o mercado inteiro por faixas de indicadores | exige chave |
+| `screener` | Filtra o mercado inteiro por faixas de indicadores; `as_of` responde o que estava PÚBLICO numa data (sem olhar o futuro); `recibo=True` congela a resposta num endereço permanente, citável | exige chave |
+| `recibo` | Lê uma consulta congelada do screener: pergunta, data de corte, versão do dado, resultado e o sha256 dele | sim |
+| `veredito` | Resumo descritivo de uma ação: seis números em três perguntas, cada um com faixa numérica e comparação (mediana do setor, história da própria empresa, mercado inteiro), mais a bandeira de confiança do dado — fato, nunca conselho | sim, qualquer ação |
 | `dicionario` | Fórmula, contas CVM e base do lucro de cada indicador, em JSON | sim |
 | `metodologia` | As páginas de metodologia publicadas, em texto | sim |
 | `saude` | Cobertura atual e última ingestão | sim |
@@ -219,8 +224,9 @@ carregando o erro de dois arquivos e apagando a fronteira entre "foi publicado"
 e "nós calculamos". Para o ano fechado, peça a série anual.
 
 A empresa **WEGE3** e a **metodologia** são abertas para degustação, sem chave.
-Para as demais, crie uma **chave grátis** (200 consultas/dia, sem cartão) ou
-assine o **Pro** em https://dadosb3.com e passe a chave no argumento
+Para as demais, crie uma **chave grátis** em https://dadosb3.com/chave-gratis?de=github
+(200 consultas/dia, sem cartão) ou assine o **Pro** em
+https://dadosb3.com/assinar?de=github e passe a chave no argumento
 `chave_api` (ou na variável `DADOS_B3_API_KEY`).
 
 A contagem de empresas não fica escrita aqui de propósito: o universo cresce
@@ -240,7 +246,7 @@ aplicam). Ex.: Itaú, Bradesco, Banco do Brasil, BB Seguridade, IRB.
 Metodologia 100% pública, testes de invariantes antes de cada publicação,
 múltiplos sem vazamento de informação futura, e **histórico de reapresentações
 registrado**. Comparativo honesto, inclusive onde os concorrentes são
-melhores: **https://dadosb3.com/comparativo**
+melhores: **https://dadosb3.com/comparativo?de=github**
 
 ## Licença
 
