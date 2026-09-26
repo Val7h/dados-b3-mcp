@@ -33,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.6.0"
+VERSAO = "1.7.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -53,8 +53,8 @@ def _get(caminho: str, chave_api: str = "", **params) -> dict:
                   params={k_: v for k_, v in params.items() if v not in (None, "", 0)})
     if r.status_code == 401:
         return {"erro": "chave de API ausente ou inativa",
-                "como_resolver": f"Crie uma chave grátis ou assine em {API}/assinar "
-                                 "e passe em chave_api. WEGE3 é aberta sem chave."}
+                "como_resolver": f"Crie uma chave grátis em {API}/chave-gratis?de=mcp ou assine "
+                                 f"em {API}/assinar e passe em chave_api. WEGE3 é aberta sem chave."}
     r.raise_for_status()
     return r.json()
 
@@ -197,7 +197,8 @@ def reapresentacoes(ticker: str, chave_api: str = "") -> dict:
 
 @mcp.tool()
 def screener(filtros: dict[str, float] | None = None, ano: int = 0,
-             as_of: str = "", limite: int = 100, chave_api: str = "") -> dict:
+             as_of: str = "", limite: int = 100, recibo: bool = False,
+             chave_api: str = "") -> dict:
     """Filtra o universo inteiro da B3 por faixas de indicadores.
 
     Parâmetros:
@@ -219,6 +220,10 @@ def screener(filtros: dict[str, float] | None = None, ano: int = 0,
         continua o das companhias ativas hoje (viés de sobrevivência, dito na
         resposta).
       limite — máximo de empresas na resposta. Padrão 100.
+      recibo — True congela a resposta num endereço permanente, com a
+        pergunta, a data de corte, a versão do dado e o sha256 do resultado.
+        Use quando for CITAR a lista: ela muda quando a base é atualizada, o
+        recibo não. Leia depois com a ferramenta `recibo`.
       chave_api — obrigatória aqui, mesmo para WEGE3, porque a consulta
         percorre todo o universo. Deixe "" para usar DADOS_B3_API_KEY.
 
@@ -234,7 +239,36 @@ def screener(filtros: dict[str, float] | None = None, ano: int = 0,
     if as_of:
         q.append(f"as_of={as_of}")
     q.append(f"limite={limite}")
+    if recibo:
+        q.append("recibo=true")
     return _get("/screener?" + "&".join(q), chave_api)
+
+
+@mcp.tool()
+def recibo(id_recibo: str) -> dict:
+    """Lê um RECIBO de pesquisa: uma consulta ao screener congelada num
+    endereço permanente — a pergunta, a data de corte (`as_of`), a versão do
+    dado, o resultado e o sha256 que prova que ele não mudou. O `id_recibo` vem
+    do campo do recibo na resposta de `screener(recibo=True)`. Aberto, sem
+    chave: quem recebe a citação precisa conseguir conferir."""
+    rid = (id_recibo or "").strip().rsplit("/", 1)[-1].removesuffix(".json")
+    if not rid:
+        return {"erro": "informe o id do recibo (o final do endereço /recibo/<id>)"}
+    return _get(f"/recibo/{rid}")
+
+
+@mcp.tool()
+def veredito(ticker: str) -> dict:
+    """Resumo DESCRITIVO de uma ação da B3 em seis números e três perguntas —
+    ganha dinheiro? (margem líquida, ROIC), está endividada? (dívida
+    líquida/EBITDA), está cara em relação ao setor e à própria história? (P/L,
+    P/VP) — cada número com a faixa numérica e a comparação com a mediana do
+    setor, com a história da própria empresa e com o universo; mais a BANDEIRA
+    DE CONFIANÇA do dado (verde/amarela/vermelha: houve reapresentação? o
+    balanço é o mais recente? passou nas conferências?) e uma frase de topo de
+    até 25 palavras. Fato comparativo, sem adjetivo de julgamento e sem
+    recomendação. Aberto para qualquer ação, sem chave; traz `citacao`."""
+    return _get(f"/empresas/{ticker.strip().upper()}/veredito")
 
 
 @mcp.tool()
