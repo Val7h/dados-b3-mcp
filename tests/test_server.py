@@ -94,3 +94,18 @@ def test_mensagem_de_chave_aponta_para_a_chave_gratis_marcada(monkeypatch):
     monkeypatch.setattr(server.httpx, "get", lambda *a, **k: R())
     r = server._get("/empresas/PETR4/indicadores")
     assert "chave-gratis?de=mcp" in r["como_resolver"]
+
+
+def test_ferramentas_da_1_8_0_existem_e_chamam_a_rota_certa(chamadas):
+    nomes = _ferramentas()
+    for n in ("desempenho", "desempenho_fii", "desempenho_etf", "precos", "eventos"):
+        assert n in nomes, nomes
+    server.desempenho(" petr4 ", media_curta=21, media_longa=100)
+    server.desempenho_fii("mxrf11")
+    server.desempenho_etf("bova11")
+    server.precos("petr4", de="2021-10-04", chave_api="k")
+    server.eventos("tims3")
+    assert [c[0] for c in chamadas] == ["/empresas/PETR4/desempenho", "/fiis/MXRF11/desempenho",
+                                        "/etfs/BOVA11/desempenho", "/empresas/PETR4/precos",
+                                        "/empresas/TIMS3/eventos"]
+    assert chamadas[3][1] == "k"                       # a chave vai pelo argumento

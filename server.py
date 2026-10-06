@@ -33,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.7.0"
+VERSAO = "1.8.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -269,6 +269,63 @@ def veredito(ticker: str) -> dict:
     até 25 palavras. Fato comparativo, sem adjetivo de julgamento e sem
     recomendação. Aberto para qualquer ação, sem chave; traz `citacao`."""
     return _get(f"/empresas/{ticker.strip().upper()}/veredito")
+
+
+@mcp.tool()
+def desempenho(ticker: str, de: str = "", ate: str = "", media_curta: int = 0,
+               media_longa: int = 0) -> dict:
+    """"Valeu a pena?" em poucos números, calculado no servidor: retorno, queda
+    máxima (com as datas do pico e do fundo), volatilidade e cruzamento de médias
+    móveis (padrão 21 x 100, últimos 5 anos) de uma AÇÃO, comprar-e-manter contra
+    o cruzamento. No preço ajustado por eventos societários e, quando há
+    proventos, também o retorno TOTAL (`retorno_total_pct`: dividendos e JCP
+    reinvestidos no data-ex). Sem custos; as `premissas` vêm na resposta. Medida
+    do passado, não recomendação. ABERTO para qualquer ticker, sem chave. `de`/`ate`
+    em AAAA-MM-DD; `media_curta`/`media_longa` mudam as médias."""
+    return _get(f"/empresas/{ticker.strip().upper()}/desempenho", de=de, ate=ate,
+                media_curta=media_curta, media_longa=media_longa)
+
+
+@mcp.tool()
+def desempenho_fii(ticker: str, de: str = "", ate: str = "", media_curta: int = 0,
+                   media_longa: int = 0) -> dict:
+    """O mesmo de `desempenho`, para um FUNDO IMOBILIÁRIO. Aberto, sem chave. O
+    preço não tem ajuste de desdobramento: salto diário acima de 35% vem em
+    `saltos_suspeitos` com `confiavel: false`. Os rendimentos mensais entram só
+    no retorno TOTAL (`retorno_total_pct`); amortização fica de fora."""
+    return _get(f"/fiis/{ticker.strip().upper()}/desempenho", de=de, ate=ate,
+                media_curta=media_curta, media_longa=media_longa)
+
+
+@mcp.tool()
+def desempenho_etf(ticker: str, de: str = "", ate: str = "", media_curta: int = 0,
+                   media_longa: int = 0) -> dict:
+    """O mesmo de `desempenho`, para um ETF (só preço, sem ajuste de desdobramento:
+    salto diário acima de 35% vem em `saltos_suspeitos`). Aberto, sem chave."""
+    return _get(f"/etfs/{ticker.strip().upper()}/desempenho", de=de, ate=ate,
+                media_curta=media_curta, media_longa=media_longa)
+
+
+@mcp.tool()
+def precos(ticker: str, de: str = "", ate: str = "", limite: int = 0,
+           chave_api: str = "") -> dict:
+    """A série DIÁRIA de preços (abertura, máxima, mínima, fechamento, médio,
+    volume, quantidade, negócios) de uma AÇÃO, do mais antigo ao mais recente, mais
+    os eventos societários do período. O preço NÃO é ajustado. `de`/`ate` em
+    AAAA-MM-DD. WEGE3 é aberta; nos demais papéis, SEM chave vem uma AMOSTRA (últimos
+    30 pregões) com um `aviso` de como ter a série inteira (chave grátis em
+    `chave_api`) e de que `desempenho` responde sem chave."""
+    return _get(f"/empresas/{ticker.strip().upper()}/precos", chave_api, de=de, ate=ate,
+                limite=limite)
+
+
+@mcp.tool()
+def eventos(ticker: str, chave_api: str = "") -> dict:
+    """Desdobramentos, grupamentos, bonificações e cisões de uma empresa, com a
+    FONTE de cada um (declarado pela B3 ou achado por nós), o fator declarado e
+    `efeito_liquido_do_dia` (eventos do mesmo dia são uma operação: 0,01 x 100 =
+    1,0). WEGE3 é aberta; os demais papéis exigem `chave_api`."""
+    return _get(f"/empresas/{ticker.strip().upper()}/eventos", chave_api)
 
 
 @mcp.tool()
