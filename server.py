@@ -307,6 +307,28 @@ def desempenho_etf(ticker: str, de: str = "", ate: str = "", media_curta: int = 
 
 
 @mcp.tool()
+def indice(codigo: str = "IBOV", de: str = "", ate: str = "", media_curta: int = 0,
+           media_longa: int = 0) -> dict:
+    """O benchmark: desempenho de um ÍNDICE da B3 (IBOV, IFIX, SMLL, IDIV, IBXX...)
+    num período, como em `desempenho` (retorno, queda máxima, cruzamento de médias;
+    últimos 5 anos). Aberto, sem chave. `codigo=""` lista os índices e a cobertura.
+    Índice de PREÇO, em pontos: não inclui dividendos."""
+    cod = (codigo or "").strip().upper()
+    if not cod:
+        return _get("/indices")
+    return _get(f"/indices/{cod}/desempenho", de=de, ate=ate,
+                media_curta=media_curta, media_longa=media_longa)
+
+
+@mcp.tool()
+def indice_precos(codigo: str = "IBOV", de: str = "", ate: str = "", chave_api: str = "") -> dict:
+    """Fechamento DIÁRIO de um índice da B3, em pontos, do mais antigo ao mais
+    recente. Sem chave vem uma AMOSTRA (últimos 30 pregões) com `aviso`; com a
+    chave grátis em `chave_api`, a série inteira."""
+    return _get(f"/indices/{codigo.strip().upper()}/precos", chave_api, de=de, ate=ate)
+
+
+@mcp.tool()
 def precos(ticker: str, de: str = "", ate: str = "", limite: int = 0,
            chave_api: str = "") -> dict:
     """A série DIÁRIA de preços (abertura, máxima, mínima, fechamento, médio,

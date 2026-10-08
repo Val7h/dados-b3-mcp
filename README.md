@@ -95,6 +95,8 @@ in order to evaluate it.
 | `desempenho` | "Was it worth it?" in a few numbers, computed server-side: return, max drawdown, volatility and a 21 x 100 moving-average crossover vs buy-and-hold, on the split-adjusted price and, when dividends are recorded, the TOTAL return (dividends and JCP reinvested on the ex-date). Open for every ticker | yes |
 | `desempenho_fii` | The same for a real-estate fund (price only; distributions only in the total return; a daily jump above 35% is flagged `confiavel: false`) | yes |
 | `desempenho_etf` | The same for an ETF (price only; a daily jump above 35% is flagged) | yes |
+| `indice` | The benchmark: performance of a B3 index (IBOV, IFIX, SMLL...); empty code lists them | yes |
+| `indice_precos` | Daily close of an index in points (30-session sample without a key) | sample |
 | `precos` | The DAILY price series of one stock (open, high, low, close, volume), oldest first, plus the corporate events of the period; not adjusted. Without a key, a 30-session SAMPLE with a notice of how to get it all | WEGE3 yes; others sample, full needs a key |
 | `eventos` | Splits, reverse splits, bonus issues and spin-offs with the source of each (B3-declared or found by us) and the net effect of the day | WEGE3 yes; others need a key |
 | `dicionario` | Formula, CVM accounts and earnings base of each indicator, as JSON | yes |
@@ -221,6 +223,8 @@ um método por ferramenta: <https://pypi.org/project/dadosb3/>
 | `desempenho` | "Valeu a pena?" em poucos números, calculado no servidor: retorno, queda máxima, volatilidade e cruzamento de médias 21 x 100 contra comprar e manter, no preço ajustado por eventos e, quando há proventos, o retorno TOTAL (dividendos e JCP reinvestidos no data-ex). Aberto para qualquer ticker | sim |
 | `desempenho_fii` | O mesmo para um fundo imobiliário (só preço; rendimentos só no retorno total; salto diário acima de 35% vem marcado `confiavel: false`) | sim |
 | `desempenho_etf` | O mesmo para um ETF (só preço; salto diário acima de 35% vem marcado) | sim |
+| `indice` | O benchmark: desempenho de um índice da B3 (IBOV, IFIX, SMLL...); código vazio lista | sim |
+| `indice_precos` | Fechamento diário de um índice em pontos (amostra de 30 pregões sem chave) | amostra |
 | `precos` | A série DIÁRIA de preços de uma ação (abertura, máxima, mínima, fechamento, volume), do mais antigo ao mais recente, mais os eventos societários do período; não ajustada. Sem chave, uma AMOSTRA de 30 pregões com o aviso de como ter tudo | WEGE3 sim; demais amostra, completa com chave |
 | `eventos` | Desdobramentos, grupamentos, bonificações e cisões com a fonte de cada um (declarado pela B3 ou achado por nós) e o efeito líquido do dia | WEGE3 sim; demais com chave |
 | `dicionario` | Fórmula, contas CVM e base do lucro de cada indicador, em JSON | sim |

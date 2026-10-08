@@ -109,3 +109,15 @@ def test_ferramentas_da_1_8_0_existem_e_chamam_a_rota_certa(chamadas):
                                         "/etfs/BOVA11/desempenho", "/empresas/PETR4/precos",
                                         "/empresas/TIMS3/eventos"]
     assert chamadas[3][1] == "k"                       # a chave vai pelo argumento
+
+
+def test_indices_da_1_8_0_chamam_a_rota_certa(chamadas):
+    nomes = _ferramentas()
+    assert "indice" in nomes and "indice_precos" in nomes, nomes
+    server.indice()
+    server.indice(" ifix ", de="2024-01-02")
+    server.indice("")
+    server.indice_precos("ibov", chave_api="k")
+    assert [c[0] for c in chamadas] == ["/indices/IBOV/desempenho", "/indices/IFIX/desempenho", "/indices",
+                                        "/indices/IBOV/precos"]
+    assert chamadas[3][1] == "k"
