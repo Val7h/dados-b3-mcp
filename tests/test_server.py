@@ -121,3 +121,19 @@ def test_indices_da_1_8_0_chamam_a_rota_certa(chamadas):
     assert [c[0] for c in chamadas] == ["/indices/IBOV/desempenho", "/indices/IFIX/desempenho", "/indices",
                                         "/indices/IBOV/precos"]
     assert chamadas[3][1] == "k"
+
+
+def test_bdrs_da_1_9_0_chamam_a_rota_certa(chamadas, monkeypatch):
+    nomes = _ferramentas()
+    assert "bdr" in nomes and "bdr_precos" in nomes, nomes
+    params = []
+    monkeypatch.setattr(server, "_get", lambda caminho, chave_api="", **p: (chamadas.append((caminho, chave_api)),
+                                                                           params.append(p), {"ok": True})[2])
+    server.bdr()
+    server.bdr(tipo=" dre ")
+    server.bdr(" aapl34 ")
+    server.bdr("nvdc34", chave_api="k")
+    server.bdr_precos("nvdc34", de="2025-01-02", chave_api="k")
+    assert [c[0] for c in chamadas] == ["/bdrs", "/bdrs", "/bdrs/AAPL34", "/bdrs/NVDC34", "/bdrs/NVDC34/precos"]
+    assert params[1] == {"tipo": "DRE"} and params[4] == {"de": "2025-01-02", "ate": ""}
+    assert chamadas[3][1] == "k" and chamadas[4][1] == "k"

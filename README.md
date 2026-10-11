@@ -97,6 +97,8 @@ in order to evaluate it.
 | `desempenho_etf` | The same for an ETF (price only; a daily jump above 35% is flagged) | yes |
 | `indice` | The benchmark: performance of a B3 index (IBOV, IFIX, SMLL...); empty code lists them | yes |
 | `indice_precos` | Daily close of an index in points (30-session sample without a key) | sample |
+| `bdr` | BDRs on B3: the list (open) or one BDR with returns, distributions in reais and splits | list yes; AAPL34 |
+| `bdr_precos` | Daily prices of a BDR (30-session sample without a key) | sample |
 | `precos` | The DAILY price series of one stock (open, high, low, close, volume), oldest first, plus the corporate events of the period; not adjusted. Without a key, a 30-session SAMPLE with a notice of how to get it all | WEGE3 yes; others sample, full needs a key |
 | `eventos` | Splits, reverse splits, bonus issues and spin-offs with the source of each (B3-declared or found by us) and the net effect of the day | WEGE3 yes; others need a key |
 | `dicionario` | Formula, CVM accounts and earnings base of each indicator, as JSON | yes |
@@ -225,6 +227,8 @@ um método por ferramenta: <https://pypi.org/project/dadosb3/>
 | `desempenho_etf` | O mesmo para um ETF (só preço; salto diário acima de 35% vem marcado) | sim |
 | `indice` | O benchmark: desempenho de um índice da B3 (IBOV, IFIX, SMLL...); código vazio lista | sim |
 | `indice_precos` | Fechamento diário de um índice em pontos (amostra de 30 pregões sem chave) | amostra |
+| `bdr` | BDRs da B3: a lista (aberta) ou um BDR com rentabilidade, proventos em reais e desdobramentos | lista sim; AAPL34 |
+| `bdr_precos` | Preços diários de um BDR (amostra de 30 pregões sem chave) | amostra |
 | `precos` | A série DIÁRIA de preços de uma ação (abertura, máxima, mínima, fechamento, volume), do mais antigo ao mais recente, mais os eventos societários do período; não ajustada. Sem chave, uma AMOSTRA de 30 pregões com o aviso de como ter tudo | WEGE3 sim; demais amostra, completa com chave |
 | `eventos` | Desdobramentos, grupamentos, bonificações e cisões com a fonte de cada um (declarado pela B3 ou achado por nós) e o efeito líquido do dia | WEGE3 sim; demais com chave |
 | `dicionario` | Fórmula, contas CVM e base do lucro de cada indicador, em JSON | sim |
