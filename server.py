@@ -33,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.8.0"
+VERSAO = "1.9.0"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -326,6 +326,37 @@ def indice_precos(codigo: str = "IBOV", de: str = "", ate: str = "", chave_api: 
     recente. Sem chave vem uma AMOSTRA (últimos 30 pregões) com `aviso`; com a
     chave grátis em `chave_api`, a série inteira."""
     return _get(f"/indices/{codigo.strip().upper()}/precos", chave_api, de=de, ate=ate)
+
+
+@mcp.tool()
+def bdr(ticker: str = "", tipo: str = "", chave_api: str = "") -> dict:
+    """BDRs negociados na B3: recibos em reais de ações ou ETFs listados lá fora
+    (AAPL34, NVDC34, IVVB39...).
+
+    `ticker=""` LISTA os BDRs que negociaram no último ano, com o tipo (DRN não
+    patrocinado; DR1/DR2/DR3 patrocinado nível I/II/III; DRE BDR de ETF), último
+    fechamento e liquidez média — aberto, sem chave; `tipo` filtra (ex.: "DRE").
+
+    Com `ticker`: cadastro da B3, último pregão, rentabilidade com e sem
+    proventos (1 mês a 10 anos, em reais, já com o câmbio), proventos por BDR em
+    R$ e desdobramentos com a conferência pelo preço. AAPL34 é aberto; os demais
+    exigem `chave_api` (grátis).
+
+    NÃO tem o código da ação lá fora nem a proporção BDR:ação. Descritivo, não é
+    recomendação."""
+    tk = (ticker or "").strip().upper()
+    if not tk:
+        return _get("/bdrs", tipo=(tipo or "").strip().upper())
+    return _get(f"/bdrs/{tk}", chave_api)
+
+
+@mcp.tool()
+def bdr_precos(ticker: str, de: str = "", ate: str = "", chave_api: str = "") -> dict:
+    """Série DIÁRIA de um BDR (fechamento, abertura, máxima, mínima, volume,
+    negócios), do COTAHIST da B3, sem ajuste. Sem chave vem uma AMOSTRA dos
+    últimos 30 pregões com `aviso` (AAPL34 inteiro); com a chave grátis em
+    `chave_api`, a série inteira. `de`/`ate` em AAAA-MM-DD."""
+    return _get(f"/bdrs/{ticker.strip().upper()}/precos", chave_api, de=de, ate=ate)
 
 
 @mcp.tool()
