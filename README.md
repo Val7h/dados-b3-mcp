@@ -29,6 +29,12 @@ https://dadosb3.com/mcp/
 
 In Claude: Settings → Connectors → add custom connector → paste the URL.
 
+The remote server exposes **36 read-only tools** (most free, no key). Beyond the table below it
+also serves `bancos`, `fatos_relevantes`, `fundos_da_acao`, `fundos_investimento`, `listas`,
+`producao_petroleo_gas`, `quanto_rendeu`, `saiu_da_bolsa`, `screener_fiis`, `tarifas_energia`,
+`acessos_telecom` and `tesouro_direto`. The local builds in Use 2 and Use 3 run the subset in the table.
+Open pages without a key: https://dadosb3.com/claude-code?de=github (Claude Code guide) and the list under "Open pages, no key".
+
 ## Use in Claude Code (plugin)
 
 This repository is a Claude Code plugin marketplace with one plugin, `dados-b3`. The plugin
@@ -227,6 +233,12 @@ https://dadosb3.com/mcp/
 ```
 
 No Claude: Configurações → Conectores → adicionar conector personalizado → cole a URL.
+
+O servidor remoto expõe **36 ferramentas somente de leitura** (a maioria grátis, sem chave). Além das
+da tabela, serve também `bancos`, `fatos_relevantes`, `fundos_da_acao`, `fundos_investimento`, `listas`,
+`producao_petroleo_gas`, `quanto_rendeu`, `saiu_da_bolsa`, `screener_fiis`, `tarifas_energia`,
+`acessos_telecom` e `tesouro_direto`. As versões locais (Uso 2 e 3) rodam o subconjunto da tabela.
+Guia do Claude Code: https://dadosb3.com/claude-code?de=github
 
 ## Uso no Claude Code (plugin)
 
