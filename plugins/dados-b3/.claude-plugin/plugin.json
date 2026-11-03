@@ -1,0 +1,14 @@
+{
+  "name": "dados-b3",
+  "displayName": "Dados B3",
+  "version": "1.0.0",
+  "description": "Brazilian stock data from public CVM and B3 sources: fundamentals, end-of-day prices, dividends, total return, FIIs, ETFs and BDRs, through the remote Dados B3 MCP server",
+  "author": {
+    "name": "Dados B3",
+    "url": "https://dadosb3.com"
+  },
+  "homepage": "https://dadosb3.com/claude-code",
+  "repository": "https://github.com/Val7h/dados-b3-mcp",
+  "license": "MIT",
+  "keywords": ["mcp", "b3", "brazil", "stocks", "cvm", "dividends", "fii", "etf", "bdr"]
+}

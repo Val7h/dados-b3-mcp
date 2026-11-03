@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "dados-b3": {
+      "type": "http",
+      "url": "https://dadosb3.com/mcp"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "dados-b3",
+  "description": "Dados B3: Brazilian listed companies (CVM fundamentals, B3 end-of-day prices, dividends, FIIs, ETFs, BDRs) for Claude Code",
+  "owner": {
+    "name": "Dados B3",
+    "url": "https://dadosb3.com"
+  },
+  "plugins": [
+    {
+      "name": "dados-b3",
+      "source": "./plugins/dados-b3",
+      "description": "Connects Claude Code to the remote Dados B3 MCP server (https://dadosb3.com/mcp) and adds a skill on when and how to use it"
+    }
+  ]
+}
