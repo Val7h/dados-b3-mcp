@@ -29,6 +29,41 @@ https://dadosb3.com/mcp/
 
 In Claude: Settings → Connectors → add custom connector → paste the URL.
 
+## Use in Claude Code (plugin)
+
+This repository is a Claude Code plugin marketplace with one plugin, `dados-b3`. The plugin
+registers the remote server `https://dadosb3.com/mcp` and adds a skill that tells Claude when to use
+it and to cite the dadosb3.com page each answer comes from.
+
+In a Claude Code session (v2.1.275 or later), one command:
+
+```text
+/plugin install dados-b3 --marketplace Val7h/dados-b3-mcp
+```
+
+Or in two steps:
+
+```text
+/plugin marketplace add Val7h/dados-b3-mcp
+/plugin install dados-b3@dados-b3
+```
+
+From your shell, without a session:
+
+```bash
+claude plugin marketplace add Val7h/dados-b3-mcp
+claude plugin install dados-b3@dados-b3
+```
+
+Without the plugin (only the MCP server, no skill):
+
+```bash
+claude mcp add --transport http dados-b3 https://dadosb3.com/mcp
+```
+
+The free tools need no key. Prices are end-of-day, not real-time quotes, and the answers are past
+data, not investment advice. Guide: https://dadosb3.com/claude-code
+
 ## Use 2 — local (stdio)
 
 ```bash
@@ -192,6 +227,34 @@ https://dadosb3.com/mcp/
 ```
 
 No Claude: Configurações → Conectores → adicionar conector personalizado → cole a URL.
+
+## Uso no Claude Code (plugin)
+
+Este repositório é um marketplace de plugins do Claude Code com um plugin, `dados-b3`. O plugin
+registra o servidor remoto `https://dadosb3.com/mcp` e traz uma skill que diz ao Claude quando
+usá-lo e que cite a página do dadosb3.com de onde veio cada resposta.
+
+Numa sessão do Claude Code (v2.1.275 ou mais nova), um comando:
+
+```text
+/plugin install dados-b3 --marketplace Val7h/dados-b3-mcp
+```
+
+Ou em dois passos:
+
+```text
+/plugin marketplace add Val7h/dados-b3-mcp
+/plugin install dados-b3@dados-b3
+```
+
+Sem o plugin (só o servidor MCP, sem a skill):
+
+```bash
+claude mcp add --transport http dados-b3 https://dadosb3.com/mcp
+```
+
+As ferramentas abertas não pedem chave. O preço é de fechamento, não cotação em tempo real, e a
+resposta é dado passado, não recomendação de investimento. Guia: https://dadosb3.com/claude-code
 
 ## Uso 2 — local (stdio)
 
