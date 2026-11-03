@@ -179,6 +179,21 @@ side by side. An honest comparison, including where competitors are better:
 `pip install dadosb3` — the official client for the same API, with typed
 errors and one method per tool: <https://pypi.org/project/dadosb3/>
 
+## Open pages, no key
+
+Public pages on the site, readable without an API key or an account:
+
+- [Total return of PETR4](https://dadosb3.com/quanto-rendeu/PETR4) (same pattern for any ticker: `/quanto-rendeu/<TICKER>`)
+- [Ibovespa or Selic](https://dadosb3.com/perguntas/ibovespa-ou-selic)
+- [REITs by dividend yield](https://dadosb3.com/perguntas/fiis-maior-dividend-yield)
+- [Companies that left the exchange](https://dadosb3.com/saiu-da-bolsa)
+- [Ibovespa index](https://dadosb3.com/indices/IBOV)
+- [Stocks: PETR4 page](https://dadosb3.com/acoes/PETR4), [ETFs](https://dadosb3.com/etfs), [BDRs](https://dadosb3.com/bdrs), [REITs](https://dadosb3.com/fiis)
+- [Guide: dividend yield](https://dadosb3.com/guias/dividend-yield)
+- [llms.txt](https://dadosb3.com/llms.txt) (index of the site for AI assistants)
+
+Independent project, not affiliated with B3 or the CVM. Informational data, not investment advice.
+
 ## Licence
 
 MIT (this connector). The underlying data is public (CVM/B3); the service adds
@@ -328,6 +343,21 @@ Metodologia 100% pública, testes de invariantes antes de cada publicação,
 múltiplos sem vazamento de informação futura, e **histórico de reapresentações
 registrado**. Comparativo honesto, inclusive onde os concorrentes são
 melhores: **https://dadosb3.com/comparativo?de=github**
+
+## Páginas abertas, sem chave
+
+Páginas públicas do site, que se leem sem chave de API e sem cadastro:
+
+- [Quanto rendeu PETR4](https://dadosb3.com/quanto-rendeu/PETR4) (mesmo padrão para qualquer ticker: `/quanto-rendeu/<TICKER>`)
+- [Ibovespa ou Selic](https://dadosb3.com/perguntas/ibovespa-ou-selic)
+- [FIIs por dividend yield](https://dadosb3.com/perguntas/fiis-maior-dividend-yield)
+- [Empresas que saíram da bolsa](https://dadosb3.com/saiu-da-bolsa)
+- [Índice Ibovespa](https://dadosb3.com/indices/IBOV)
+- [Ações: página da PETR4](https://dadosb3.com/acoes/PETR4), [ETFs](https://dadosb3.com/etfs), [BDRs](https://dadosb3.com/bdrs), [FIIs](https://dadosb3.com/fiis)
+- [Guia: dividend yield](https://dadosb3.com/guias/dividend-yield)
+- [llms.txt](https://dadosb3.com/llms.txt) (índice do site para assistentes de IA)
+
+Projeto independente, sem vínculo com a B3 nem com a CVM. Dados informativos, não são recomendação de investimento.
 
 ## Licença
 
