@@ -62,7 +62,7 @@ claude mcp add --transport http dados-b3 https://dadosb3.com/mcp
 ```
 
 The free tools need no key. Prices are end-of-day, not real-time quotes, and the answers are past
-data, not investment advice. Guide: https://dadosb3.com/claude-code
+data, not investment advice. Guide: https://dadosb3.com/claude-code?de=github
 
 ## Use 2 — local (stdio)
 
@@ -183,14 +183,14 @@ errors and one method per tool: <https://pypi.org/project/dadosb3/>
 
 Public pages on the site, readable without an API key or an account:
 
-- [Total return of PETR4](https://dadosb3.com/quanto-rendeu/PETR4) (same pattern for any ticker: `/quanto-rendeu/<TICKER>`)
-- [Ibovespa or Selic](https://dadosb3.com/perguntas/ibovespa-ou-selic)
-- [REITs by dividend yield](https://dadosb3.com/perguntas/fiis-maior-dividend-yield)
-- [Companies that left the exchange](https://dadosb3.com/saiu-da-bolsa)
-- [Ibovespa index](https://dadosb3.com/indices/IBOV)
-- [Stocks: PETR4 page](https://dadosb3.com/acoes/PETR4), [ETFs](https://dadosb3.com/etfs), [BDRs](https://dadosb3.com/bdrs), [REITs](https://dadosb3.com/fiis)
-- [Guide: dividend yield](https://dadosb3.com/guias/dividend-yield)
-- [llms.txt](https://dadosb3.com/llms.txt) (index of the site for AI assistants)
+- [Total return of PETR4](https://dadosb3.com/quanto-rendeu/PETR4?de=github) (same pattern for any ticker: `/quanto-rendeu/<TICKER>`)
+- [Ibovespa or Selic](https://dadosb3.com/perguntas/ibovespa-ou-selic?de=github)
+- [REITs by dividend yield](https://dadosb3.com/perguntas/fiis-maior-dividend-yield?de=github)
+- [Companies that left the exchange](https://dadosb3.com/saiu-da-bolsa?de=github)
+- [Ibovespa index](https://dadosb3.com/indices/IBOV?de=github)
+- [Stocks: PETR4 page](https://dadosb3.com/acoes/PETR4?de=github), [ETFs](https://dadosb3.com/etfs?de=github), [BDRs](https://dadosb3.com/bdrs?de=github), [REITs](https://dadosb3.com/fiis?de=github)
+- [Guide: dividend yield](https://dadosb3.com/guias/dividend-yield?de=github)
+- [llms.txt](https://dadosb3.com/llms.txt?de=github) (index of the site for AI assistants)
 
 Independent project, not affiliated with B3 or the CVM. Informational data, not investment advice.
 
@@ -254,7 +254,7 @@ claude mcp add --transport http dados-b3 https://dadosb3.com/mcp
 ```
 
 As ferramentas abertas não pedem chave. O preço é de fechamento, não cotação em tempo real, e a
-resposta é dado passado, não recomendação de investimento. Guia: https://dadosb3.com/claude-code
+resposta é dado passado, não recomendação de investimento. Guia: https://dadosb3.com/claude-code?de=github
 
 ## Uso 2 — local (stdio)
 
@@ -348,14 +348,14 @@ melhores: **https://dadosb3.com/comparativo?de=github**
 
 Páginas públicas do site, que se leem sem chave de API e sem cadastro:
 
-- [Quanto rendeu PETR4](https://dadosb3.com/quanto-rendeu/PETR4) (mesmo padrão para qualquer ticker: `/quanto-rendeu/<TICKER>`)
-- [Ibovespa ou Selic](https://dadosb3.com/perguntas/ibovespa-ou-selic)
-- [FIIs por dividend yield](https://dadosb3.com/perguntas/fiis-maior-dividend-yield)
-- [Empresas que saíram da bolsa](https://dadosb3.com/saiu-da-bolsa)
-- [Índice Ibovespa](https://dadosb3.com/indices/IBOV)
-- [Ações: página da PETR4](https://dadosb3.com/acoes/PETR4), [ETFs](https://dadosb3.com/etfs), [BDRs](https://dadosb3.com/bdrs), [FIIs](https://dadosb3.com/fiis)
-- [Guia: dividend yield](https://dadosb3.com/guias/dividend-yield)
-- [llms.txt](https://dadosb3.com/llms.txt) (índice do site para assistentes de IA)
+- [Quanto rendeu PETR4](https://dadosb3.com/quanto-rendeu/PETR4?de=github) (mesmo padrão para qualquer ticker: `/quanto-rendeu/<TICKER>`)
+- [Ibovespa ou Selic](https://dadosb3.com/perguntas/ibovespa-ou-selic?de=github)
+- [FIIs por dividend yield](https://dadosb3.com/perguntas/fiis-maior-dividend-yield?de=github)
+- [Empresas que saíram da bolsa](https://dadosb3.com/saiu-da-bolsa?de=github)
+- [Índice Ibovespa](https://dadosb3.com/indices/IBOV?de=github)
+- [Ações: página da PETR4](https://dadosb3.com/acoes/PETR4?de=github), [ETFs](https://dadosb3.com/etfs?de=github), [BDRs](https://dadosb3.com/bdrs?de=github), [FIIs](https://dadosb3.com/fiis?de=github)
+- [Guia: dividend yield](https://dadosb3.com/guias/dividend-yield?de=github)
+- [llms.txt](https://dadosb3.com/llms.txt?de=github) (índice do site para assistentes de IA)
 
 Projeto independente, sem vínculo com a B3 nem com a CVM. Dados informativos, não são recomendação de investimento.
 
