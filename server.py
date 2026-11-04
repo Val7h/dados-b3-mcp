@@ -33,7 +33,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.9.1"
+VERSAO = "1.9.2"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
