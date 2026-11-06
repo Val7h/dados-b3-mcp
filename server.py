@@ -12,10 +12,13 @@ As ferramentas expõem dados fundamentalistas das companhias abertas
 brasileiras (2010–hoje), dos fundos imobiliários e dos ETFs, com metodologia
 pública. O universo cresce quando a
 CVM publica — por isso nenhuma contagem fica escrita aqui: quem quiser o
-número de hoje chama `saude`. A empresa WEGE3 e a
-metodologia são gratuitas (degustação); as demais empresas exigem uma chave
-(grátis ou Pro) passada no argumento `chave_api`. Detalhes e planos em
-https://dadosb3.com.
+número de hoje chama `saude`. Sem chave, qualquer ticker, um por vez, responde
+em indicadores anuais, múltiplos, contas CVM, dividendos e FIIs (limite por
+endereço: 60 consultas por hora e 150 por dia; assistentes de IA, 2.000 por hora
+e 20.000 por dia). A WEGE3 é aberta em todas as ferramentas. Scores,
+reapresentações, trimestres, eventos, série diária completa e os screeners pedem
+chave (grátis, 200 consultas/dia, ou Pro) no argumento `chave_api`. Site
+oficial e planos: https://dadosb3.com.
 """
 
 from __future__ import annotations
@@ -33,7 +36,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.9.2"
+VERSAO = "1.9.3"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -54,7 +57,8 @@ def _get(caminho: str, chave_api: str = "", **params) -> dict:
     if r.status_code == 401:
         return {"erro": "chave de API ausente ou inativa",
                 "como_resolver": f"Crie uma chave grátis em {API}/chave-gratis?de=mcp ou assine "
-                                 f"em {API}/assinar e passe em chave_api. WEGE3 é aberta sem chave."}
+                                 f"em {API}/assinar e passe em chave_api. Sem chave: qualquer ticker em indicadores, múltiplos, "
+                                 f"contas, dividendos e FIIs; WEGE3 em todas."}
     r.raise_for_status()
     return r.json()
 
@@ -88,10 +92,10 @@ def indicadores_anuais(ticker: str, chave_api: str = "") -> dict:
       ticker — código da ação na B3, em maiúsculas e com o dígito da classe.
         Exemplos: "WEGE3" (ordinária), "PETR4" (preferencial), "SANB11"
         (unit). Use `listar_empresas` para descobrir os disponíveis.
-      chave_api — chave do Dados B3. Dispensável para WEGE3, aberta como
-        degustação; necessária para qualquer outra empresa. Deixe "" para usar
-        a variável de ambiente DADOS_B3_API_KEY, quando existir. Sem chave
-        válida a resposta vem com o campo `erro` explicando como obter uma."""
+      chave_api — opcional. Sem chave, qualquer ticker responde, um por vez
+        (limite por endereço: 60/hora e 150/dia; assistentes de IA, 2.000/hora
+        e 20.000/dia); com chave vale o limite da chave. Deixe "" para usar a
+        variável de ambiente DADOS_B3_API_KEY, quando existir."""
     return _get(f"/empresas/{ticker}/indicadores", chave_api)
 
 
@@ -109,9 +113,10 @@ def multiplos(ticker: str, chave_api: str = "") -> dict:
     Parâmetros:
       ticker — código da ação na B3, em maiúsculas e com o dígito da classe.
         Exemplos: "WEGE3", "PETR4", "SANB11". Veja `listar_empresas`.
-      chave_api — chave do Dados B3. Dispensável para WEGE3, aberta como
-        degustação; necessária para as demais. Deixe "" para usar a variável
-        de ambiente DADOS_B3_API_KEY, quando existir."""
+      chave_api — opcional. Sem chave, qualquer ticker responde, um por vez
+        (limite por endereço: 60/hora e 150/dia; assistentes de IA, 2.000/hora
+        e 20.000/dia); com chave vale o limite da chave. Deixe "" para usar a
+        variável de ambiente DADOS_B3_API_KEY, quando existir."""
     return _get(f"/empresas/{ticker}/multiplos", chave_api)
 
 
@@ -130,9 +135,10 @@ def fatos_contabeis(ticker: str, trimestral: bool = False, chave_api: str = "") 
         devolve os exercícios ANUAIS, vindos dos formulários DFP; True devolve
         os TRIMESTRES, vindos dos ITR. Não é um filtro: os dois modos cobrem o
         mesmo histórico, muda apenas o período de cada linha.
-      chave_api — chave do Dados B3. Dispensável para WEGE3, aberta como
-        degustação; necessária para as demais. Deixe "" para usar a variável
-        de ambiente DADOS_B3_API_KEY, quando existir."""
+      chave_api — opcional. Sem chave, qualquer ticker responde, um por vez
+        (limite por endereço: 60/hora e 150/dia; assistentes de IA, 2.000/hora
+        e 20.000/dia); com chave vale o limite da chave. Deixe "" para usar a
+        variável de ambiente DADOS_B3_API_KEY, quando existir."""
     return _get(f"/empresas/{ticker}/fatos?trimestral={str(trimestral).lower()}",
                 chave_api)
 
@@ -149,9 +155,10 @@ def dividendos(ticker: str, chave_api: str = "") -> dict:
     Parâmetros:
       ticker — código da ação na B3, em maiúsculas e com o dígito da classe.
         Exemplos: "WEGE3", "PETR4", "SANB11". Veja `listar_empresas`.
-      chave_api — chave do Dados B3. Dispensável para WEGE3, aberta como
-        degustação; necessária para as demais. Deixe "" para usar a variável
-        de ambiente DADOS_B3_API_KEY, quando existir.
+      chave_api — opcional. Sem chave, qualquer ticker responde, um por vez
+        (limite por endereço: 60/hora e 150/dia; assistentes de IA, 2.000/hora
+        e 20.000/dia); com chave vale o limite da chave. Deixe "" para usar a
+        variável de ambiente DADOS_B3_API_KEY, quando existir.
 
     Ausência de provento e ausência de informação são coisas diferentes aqui:
     a resposta distingue "a B3 respondeu que não houve" de "não conseguimos
@@ -170,9 +177,10 @@ def scores(ticker: str, chave_api: str = "") -> dict:
     Parâmetros:
       ticker — código da ação na B3, em maiúsculas e com o dígito da classe.
         Exemplos: "WEGE3", "PETR4", "SANB11". Veja `listar_empresas`.
-      chave_api — chave do Dados B3. Dispensável para WEGE3, aberta como
-        degustação; necessária para as demais. Deixe "" para usar a variável
-        de ambiente DADOS_B3_API_KEY, quando existir."""
+      chave_api — chave do Dados B3 (grátis, 200 consultas/dia, sem cartão).
+        Dispensável para WEGE3, aberta em todas as ferramentas; necessária para
+        as demais. Deixe "" para usar a variável de ambiente DADOS_B3_API_KEY,
+        quando existir."""
     return _get(f"/empresas/{ticker}/scores", chave_api)
 
 
@@ -189,9 +197,10 @@ def reapresentacoes(ticker: str, chave_api: str = "") -> dict:
     Parâmetros:
       ticker — código da ação na B3, em maiúsculas e com o dígito da classe.
         Exemplos: "WEGE3", "PETR4", "SANB11". Veja `listar_empresas`.
-      chave_api — chave do Dados B3. Dispensável para WEGE3, aberta como
-        degustação; necessária para as demais. Deixe "" para usar a variável
-        de ambiente DADOS_B3_API_KEY, quando existir."""
+      chave_api — chave do Dados B3 (grátis, 200 consultas/dia, sem cartão).
+        Dispensável para WEGE3, aberta em todas as ferramentas; necessária para
+        as demais. Deixe "" para usar a variável de ambiente DADOS_B3_API_KEY,
+        quando existir."""
     return _get(f"/empresas/{ticker}/reapresentacoes", chave_api)
 
 
@@ -461,7 +470,8 @@ def fii(ticker: str, chave_api: str = "") -> dict:
 
     Parâmetros:
       ticker — código do fundo na B3. Ex.: "MXRF11", "HGLG11".
-      chave_api — chave do Dados B3. MXRF11 é aberto como degustação."""
+      chave_api — opcional: qualquer fundo responde sem chave (limite por
+        endereço: 60/hora e 150/dia; assistentes de IA, 2.000/hora e 20.000/dia)."""
     return _get(f"/fiis/{ticker}", chave_api)
 
 
@@ -552,8 +562,8 @@ def fiis_ranking(chave_api: str = "") -> dict:
     limpos (sem flag) e fundos líquidos. Descritivo, não é recomendação.
 
     Parâmetros:
-      chave_api — obrigatória (grátis ou Pro); o fundo MXRF11 é aberto na
-        ferramenta `fii`, mas o ranking varre o universo inteiro."""
+      chave_api — opcional: o ranking responde sem chave (limite por
+        endereço); com chave vale o limite da chave."""
     return _get("/fiis", chave_api)
 
 

@@ -1,6 +1,49 @@
-# Dados B3 — MCP server (Brazilian stock market, auditable fundamentals)
+# Dados B3 — MCP server for the Brazilian stock market (B3)
 
-*[Português abaixo](#dados-b3--servidor-mcp-bolsa-brasileira-fundamentos-auditáveis)*
+**Official site: https://dadosb3.com/?de=github** · **Remote MCP endpoint: `https://dadosb3.com/mcp/`** ·
+[Methodology](https://dadosb3.com/metodologia?de=github) · [Connection guide](https://dadosb3.com/conector?de=github) ·
+[llms.txt](https://dadosb3.com/llms.txt?de=github)
+
+*[Português abaixo](#dados-b3--servidor-mcp-bolsa-brasileira-b3)*
+
+> dadosb3.com is the only official address of the project. The old address on onrender.com is
+> retired; anything that still points there is out of date.
+
+**Keywords:** B3, Bovespa, Brazilian stock market, Brazilian stocks (ações brasileiras), dividends
+(dividendos, proventos), FII (Brazilian REITs, fundos imobiliários), ETFs, BDRs, CVM filings,
+delisted companies (deslistagem), fundamentals, point-in-time multiples, MCP, Model Context Protocol.
+
+## At a glance (checked against the live server on 2026-11-06)
+
+| | |
+|---|---|
+| Remote server | `https://dadosb3.com/mcp/` (Streamable HTTP), **36 read-only tools** |
+| Coverage | every company with CVM filings (DFP/ITR), 2010 to today, banks and insurers included; FIIs, ETFs, BDRs, B3 indices, Tesouro Direto, macro series; **companies that left the exchange**, with their last trading day, CVM status and dividends paid before leaving ([list](https://dadosb3.com/saiu-da-bolsa?de=github)) |
+| Updates | end-of-day prices (B3 COTAHIST) and dividends every trading night; CVM filings as the CVM publishes them. Live proof: `saude` / [dadosb3.com/saude](https://dadosb3.com/saude?de=github) |
+| Without a key | **any ticker, one at a time**: annual indicators, multiples, CVM accounts, dividends, FIIs, FII ranking, total return (`desempenho`), `veredito`, ETF ranking, methodology. Limit: 60 queries/hour and 150/day per IP; AI assistants (ChatGPT, Claude, Perplexity, this MCP connector) get their own allowance of 2,000/hour and 20,000/day |
+| With a free key | 200 queries/day, no card: adds scores, restatements, quarterly series, full daily prices, corporate events, ETF detail and the screeners ([get a key](https://dadosb3.com/chave-gratis?de=github)) |
+| Pro | R$ 49.90/month, 10,000 queries/day and the whole base as CSV ([plans](https://dadosb3.com/assinar?de=github)) |
+| Not covered | intraday or real-time quotes, prices before 2010, investment advice |
+
+## Methodology and lineage
+
+Every number carries the CVM account it came from. Each indicator page links down to the line of the
+CVM file, e.g. [ITUB4 ROE 2025](https://dadosb3.com/linhagem/ITUB4/2025/roe?de=github). Formulas:
+[methodology](https://dadosb3.com/metodologia?de=github) and the [JSON dictionary](https://dadosb3.com/dicionario?de=github).
+Audit it yourself with your own seed: [dadosb3.com/auditoria](https://dadosb3.com/auditoria?de=github)
+(or the `auditar_amostra` tool). Invariant tests run before every release:
+[transparency page](https://dadosb3.com/transparencia?de=github).
+
+## Example questions
+
+- "How much did PETR4 pay in dividends over the last 12 months, with ex-dates?" → `dividendos`
+- "Which companies left B3 in 2026, and what did they pay before leaving?" → `saiu_da_bolsa`, `dividendos`
+- "Itaú's 2025 ROE, with the CVM accounts behind it" → `indicadores_anuais`
+- "FIIs with the highest 12-month yield and P/B below 1" → `fiis_ranking`, `fii`
+- "Was WEGE3 worth it over 5 years, against the Ibovespa and Selic?" → `desempenho`
+- "What did R$ 1,000 in ITUB4 return?" → `quanto_rendeu`
+
+## What it is
 
 An [MCP](https://modelcontextprotocol.io) connector that gives your AI agent
 (Claude, ChatGPT, Cursor and others) access to **fundamentals for Brazilian
@@ -29,7 +72,7 @@ https://dadosb3.com/mcp/
 
 In Claude: Settings → Connectors → add custom connector → paste the URL.
 
-The remote server exposes **36 read-only tools** (most free, no key). Beyond the table below it
+The remote server exposes **36 read-only tools** (most of them work without a key). Beyond the table below it
 also serves `bancos`, `fatos_relevantes`, `fundos_da_acao`, `fundos_investimento`, `listas`,
 `producao_petroleo_gas`, `quanto_rendeu`, `saiu_da_bolsa`, `screener_fiis`, `tarifas_energia`,
 `acessos_telecom` and `tesouro_direto`. The local builds in Use 2 and Use 3 run the subset in the table.
@@ -116,19 +159,19 @@ in order to evaluate it.
 | Tool | What it does | Free? |
 |---|---|---|
 | `listar_empresas` | Every covered company (name, tax ID, ticker), banks and insurers included | yes |
-| `indicadores_anuais` | ROE, ROIC, margins, growth, net debt/EBITDA — annual series from 2010 | WEGE3 yes; others need a key |
-| `multiplos` | P/E, P/B, EV/EBITDA point-in-time; trailing P/E | WEGE3 yes; others need a key |
-| `fatos_contabeis` | Standardised accounts carrying the CVM code each figure came from | WEGE3 yes; others need a key |
-| `dividendos` | Cash distributions, annual summary and 12-month dividend yield | WEGE3 yes; others need a key |
+| `indicadores_anuais` | ROE, ROIC, margins, growth, net debt/EBITDA — annual series from 2010 | yes, any ticker (no-key limit above) |
+| `multiplos` | P/E, P/B, EV/EBITDA point-in-time; trailing P/E | yes, any ticker (no-key limit above) |
+| `fatos_contabeis` | Standardised accounts carrying the CVM code each figure came from | yes, any ticker (no-key limit above) |
+| `dividendos` | Cash distributions, annual summary and 12-month dividend yield | yes, any ticker (no-key limit above) |
 | `scores` | Piotroski F-Score with all nine criteria shown, plus the Graham test | WEGE3 yes; others need a key |
 | `reapresentacoes` | Restated filings — the original and the revised figure side by side | WEGE3 yes; others need a key |
 | `trimestres` | Quarterly series: Q1/Q2/Q3 accounts as filed, the quarter's price, margins and trailing ROE | WEGE3 yes; others need a key |
 | `etfs_ranking` | B3 ETFs: most traded, largest net assets, largest premium/discount to same-day NAV, 12m NAV return, lowest EFFECTIVE fee | yes |
 | `etf` | One ETF: daily NAV (FNET filing), premium/discount, monthly effective fee, portfolio (CDA) and overlap with peers | BOVA11 yes; others need a key |
 | `auditar_amostra` | Draws cases with YOUR seed so you can recompute each figure against the CVM file (formula, account, where to look) | yes |
-| `fiis_ranking` | Most discounted FIIs (point-in-time P/B), highest 12m yield and medians by segment | needs a key |
+| `fiis_ranking` | Most discounted FIIs (point-in-time P/B), highest 12m yield and medians by segment | yes |
 | `hoje` | What changed in the last 30 days: filings published, filings **re-sent**, dividends, fund distributions, corporate actions, ticker changes | yes |
-| `fii` | One real-estate fund: point-in-time P/B, 12-month yield, vacancy, recent distributions | MXRF11 yes; others need a key |
+| `fii` | One real-estate fund: point-in-time P/B, 12-month yield, vacancy, recent distributions | yes, any fund |
 | `fiis` | Filters funds by P/B and dividend-yield ranges | key required |
 | `screener` | Filters the whole market by indicator ranges; `as_of` answers what was PUBLIC on a date (no look-ahead); `recibo=True` freezes the answer at a permanent, citable address | key required |
 | `recibo` | Reads a frozen screener query: question, cut-off date, data version, result and its sha256 | yes |
@@ -153,11 +196,11 @@ the figures the company reported, carrying the error of two filings and erasing
 the line between what was filed and what we calculated. For the closed year, ask
 for the annual series.
 
-**WEGE3** and the **whole methodology** are open, no key needed. For other
-companies, create a **free key** at https://dadosb3.com/chave-gratis?de=github
-(200 queries/day, no card) or subscribe to **Pro** at
-https://dadosb3.com/assinar?de=github, and pass it in the `chave_api` argument or the
-`DADOS_B3_API_KEY` environment variable.
+**No key needed** for the tools marked "yes": any ticker, one at a time, up to 60 queries/hour and
+150/day per IP (AI assistants and this connector: 2,000/hour and 20,000/day). **WEGE3** is open in
+every tool. For the tools that need a key, create a **free key** at https://dadosb3.com/chave-gratis?de=github
+(200 queries/day, no card) or subscribe to **Pro** at https://dadosb3.com/assinar?de=github
+(10,000/day), and pass it in the `chave_api` argument or the `DADOS_B3_API_KEY` environment variable.
 
 The company count is deliberately not written here: the universe grows whenever
 the CVM publishes, and a number frozen in a README ages without anyone
@@ -207,7 +250,50 @@ standardisation, methodology and tests.
 
 ---
 
-# Dados B3 — servidor MCP (bolsa brasileira, fundamentos auditáveis)
+# Dados B3 — servidor MCP (bolsa brasileira, B3)
+
+**Site oficial: https://dadosb3.com/?de=github** · **Endpoint MCP remoto: `https://dadosb3.com/mcp/`** ·
+[Metodologia](https://dadosb3.com/metodologia?de=github) · [Guia de conexão](https://dadosb3.com/conector?de=github) ·
+[llms.txt](https://dadosb3.com/llms.txt?de=github)
+
+> dadosb3.com é o único endereço oficial do projeto. O endereço antigo no onrender.com foi
+> aposentado; o que ainda aponta para lá está desatualizado.
+
+**Palavras-chave:** B3, Bovespa, bolsa brasileira, ações brasileiras, dividendos, proventos, FII
+(fundos imobiliários), ETFs, BDRs, CVM, deslistagem (empresas que saíram da bolsa), fundamentos,
+múltiplos ponto-no-tempo, MCP, Model Context Protocol, Brazilian stock market.
+
+## Resumo (conferido no servidor vivo em 06/11/2026)
+
+| | |
+|---|---|
+| Servidor remoto | `https://dadosb3.com/mcp/` (Streamable HTTP), **36 ferramentas somente de leitura** |
+| Cobertura | toda companhia com DFP/ITR na CVM, de 2010 até hoje, inclusive bancos e seguradoras; FIIs, ETFs, BDRs, índices da B3, Tesouro Direto, séries macro; **empresas que saíram da bolsa**, com último pregão, situação na CVM e proventos pagos antes de sair ([lista](https://dadosb3.com/saiu-da-bolsa?de=github)) |
+| Atualização | preço de fechamento (COTAHIST da B3) e proventos toda noite de pregão; balanços da CVM conforme a CVM publica. Prova ao vivo: `saude` / [dadosb3.com/saude](https://dadosb3.com/saude?de=github) |
+| Sem chave | **qualquer ticker, um por vez**: indicadores anuais, múltiplos, contas CVM, dividendos, FIIs, ranking de FIIs, retorno total (`desempenho`), `veredito`, ranking de ETFs, metodologia. Limite: 60 consultas por hora e 150 por dia, por endereço; assistentes de IA (ChatGPT, Claude, Perplexity, este conector MCP) têm conta própria de 2.000 por hora e 20.000 por dia |
+| Chave grátis | 200 consultas/dia, sem cartão: acrescenta scores, reapresentações, trimestres, série diária completa, eventos societários, detalhe de ETF e os screeners ([criar chave](https://dadosb3.com/chave-gratis?de=github)) |
+| Pro | R$ 49,90/mês, 10.000 consultas/dia e a base inteira em CSV ([planos](https://dadosb3.com/assinar?de=github)) |
+| Não cobre | cotação intradiária ou em tempo real, preço antes de 2010, recomendação de investimento |
+
+## Metodologia e linhagem
+
+Cada número carrega a conta CVM de origem. A página de cada indicador desce até a linha do arquivo
+da CVM, por exemplo [ROE 2025 do ITUB4](https://dadosb3.com/linhagem/ITUB4/2025/roe?de=github). Fórmulas:
+[metodologia](https://dadosb3.com/metodologia?de=github) e o [dicionário em JSON](https://dadosb3.com/dicionario?de=github).
+Audite você mesmo, com a sua semente: [dadosb3.com/auditoria](https://dadosb3.com/auditoria?de=github)
+(ou a ferramenta `auditar_amostra`). Os testes de invariantes rodam antes de cada publicação:
+[transparência](https://dadosb3.com/transparencia?de=github).
+
+## Perguntas de exemplo
+
+- "Quanto a PETR4 pagou de dividendos nos últimos 12 meses, com data-com?" → `dividendos`
+- "Quais empresas saíram da bolsa em 2026 e quanto pagaram antes de sair?" → `saiu_da_bolsa`, `dividendos`
+- "ROE do Itaú em 2025, com as contas CVM" → `indicadores_anuais`
+- "FIIs com maior DY de 12 meses e P/VP abaixo de 1" → `fiis_ranking`, `fii`
+- "Valeu a pena ter WEGE3 nos últimos 5 anos, contra Ibovespa e Selic?" → `desempenho`
+- "Quanto rendeu R$ 1.000 em ITUB4?" → `quanto_rendeu`
+
+## O que é
 
 Conector [MCP](https://modelcontextprotocol.io) que dá ao seu agente de IA
 (Claude, ChatGPT, Cursor e outros) acesso a **dados fundamentalistas das
@@ -295,19 +381,19 @@ um método por ferramenta: <https://pypi.org/project/dadosb3/>
 | Ferramenta | O que faz | Grátis? |
 |---|---|---|
 | `listar_empresas` | Todas as companhias cobertas (nome, CNPJ, ticker), incl. bancos e seguradoras | sim |
-| `indicadores_anuais` | ROE, ROIC, margens, crescimento, DL/EBITDA — série anual desde 2010 | WEGE3 sim; demais com chave |
-| `multiplos` | P/L, P/VP, EV/EBITDA ponto-no-tempo; P/L TTM | WEGE3 sim; demais com chave |
-| `fatos_contabeis` | Contas padronizadas com a conta CVM de origem de cada número | WEGE3 sim; demais com chave |
-| `dividendos` | Proventos, resumo anual e dividend yield de 12 meses | WEGE3 sim; demais com chave |
+| `indicadores_anuais` | ROE, ROIC, margens, crescimento, DL/EBITDA — série anual desde 2010 | sim, qualquer ticker (limite sem chave acima) |
+| `multiplos` | P/L, P/VP, EV/EBITDA ponto-no-tempo; P/L TTM | sim, qualquer ticker (limite sem chave acima) |
+| `fatos_contabeis` | Contas padronizadas com a conta CVM de origem de cada número | sim, qualquer ticker (limite sem chave acima) |
+| `dividendos` | Proventos, resumo anual e dividend yield de 12 meses | sim, qualquer ticker (limite sem chave acima) |
 | `scores` | Piotroski F-Score com os nove critérios abertos, e o critério de Graham | WEGE3 sim; demais com chave |
 | `reapresentacoes` | Balanços republicados — versão original e revisada lado a lado | WEGE3 sim; demais com chave |
 | `trimestres` | Série trimestral: contas do 1T/2T/3T como publicadas, preço do trimestre, margens e ROE TTM | WEGE3 sim; demais com chave |
 | `etfs_ranking` | ETFs da B3: mais negociados, maior patrimônio, maior ágio/deságio sobre a cota do dia, retorno 12m pela cota, menor taxa EFETIVA | sim |
 | `etf` | Um ETF: cota diária (FNET), ágio/deságio, taxa efetiva mês a mês, carteira (CDA) e sobreposição com pares | BOVA11 sim; demais com chave |
 | `auditar_amostra` | Sorteia casos com a SUA semente para refazer cada número contra o arquivo da CVM (fórmula, conta, onde procurar) | sim |
-| `fiis_ranking` | FIIs mais descontados (P/VP ponto-no-tempo), maiores DY 12m e mediana por segmento | exige chave |
+| `fiis_ranking` | FIIs mais descontados (P/VP ponto-no-tempo), maiores DY 12m e mediana por segmento | sim |
 | `hoje` | O que mudou nos últimos 30 dias: balanços publicados, balanços **reenviados**, proventos, rendimentos de FII, eventos societários, trocas de ticker | sim |
-| `fii` | Um fundo imobiliário: P/VP ponto-no-tempo, DY de 12 meses, vacância, rendimentos recentes | MXRF11 sim; demais com chave |
+| `fii` | Um fundo imobiliário: P/VP ponto-no-tempo, DY de 12 meses, vacância, rendimentos recentes | sim, qualquer fundo |
 | `fiis` | Filtra fundos por faixas de P/VP e dividend yield | exige chave |
 | `screener` | Filtra o mercado inteiro por faixas de indicadores; `as_of` responde o que estava PÚBLICO numa data (sem olhar o futuro); `recibo=True` congela a resposta num endereço permanente, citável | exige chave |
 | `recibo` | Lê uma consulta congelada do screener: pergunta, data de corte, versão do dado, resultado e o sha256 dele | sim |
@@ -331,11 +417,12 @@ calculado por nós entraria na MESMA lista dos que a companhia reportou,
 carregando o erro de dois arquivos e apagando a fronteira entre "foi publicado"
 e "nós calculamos". Para o ano fechado, peça a série anual.
 
-A empresa **WEGE3** e a **metodologia** são abertas para degustação, sem chave.
-Para as demais, crie uma **chave grátis** em https://dadosb3.com/chave-gratis?de=github
-(200 consultas/dia, sem cartão) ou assine o **Pro** em
-https://dadosb3.com/assinar?de=github e passe a chave no argumento
-`chave_api` (ou na variável `DADOS_B3_API_KEY`).
+**Sem chave** nas ferramentas marcadas "sim": qualquer ticker, um por vez, até 60 consultas por hora
+e 150 por dia, por endereço (assistentes de IA e este conector: 2.000 por hora e 20.000 por dia). A
+**WEGE3** é aberta em todas. Para as que pedem chave, crie uma **chave grátis** em
+https://dadosb3.com/chave-gratis?de=github (200 consultas/dia, sem cartão) ou assine o **Pro** em
+https://dadosb3.com/assinar?de=github (10.000/dia) e passe a chave no argumento `chave_api` (ou na
+variável `DADOS_B3_API_KEY`).
 
 A contagem de empresas não fica escrita aqui de propósito: o universo cresce
 quando a CVM publica, e um número congelado num README envelheceria sem
