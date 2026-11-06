@@ -2,7 +2,7 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.Val7h/dados-b3",
   "title": "Dados B3",
-  "description": "Brazilian stocks (B3): 36 read-only tools for fundamentals, dividends, FIIs, ETFs, BDRs. Free.",
+  "description": "Brazilian stocks (B3): 36 read-only tools. Fundamentals, dividends, FIIs, ETFs. Most need no key.",
   "websiteUrl": "https://dadosb3.com/conector",
   "icons": [
     {
@@ -20,7 +20,7 @@
       ]
     }
   ],
-  "version": "1.9.2",
+  "version": "1.9.3",
   "repository": {
     "url": "https://github.com/Val7h/dados-b3-mcp",
     "source": "github"
@@ -34,14 +34,14 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/val7h/dados-b3-mcp:1.9.2",
+      "identifier": "ghcr.io/val7h/dados-b3-mcp:1.9.3",
       "transport": {
         "type": "stdio"
       },
       "environmentVariables": [
         {
           "name": "DADOS_B3_API_KEY",
-          "description": "Dados B3 API key. Optional: WEGE3 and the whole methodology are free without one. Create a free key (200 queries/day, no card) or subscribe at https://dadosb3.com.",
+          "description": "Dados B3 API key. Optional: without one, any ticker answers in annual indicators, multiples, CVM accounts, dividends and FIIs (60/hour, 150/day per IP; AI assistants 2,000/hour). A free key (200 queries/day, no card) or Pro unlocks scores, restatements, quarterly data, full prices and screeners: https://dadosb3.com",
           "isRequired": false,
           "isSecret": true
         }
