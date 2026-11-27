@@ -36,7 +36,7 @@ CHAVE = os.environ.get("DADOS_B3_API_KEY", "")
 # else pkg_version("mcp")`), e qualquer cliente que inspecione o conector vê o
 # número do SDK achando que é o nosso. FastMCP não aceita `version=` no
 # construtor — o campo mora no servidor de baixo nível que ele embrulha.
-VERSAO = "1.9.3"
+VERSAO = "1.9.4"
 
 mcp = FastMCP("dados-b3")
 mcp._mcp_server.version = VERSAO
@@ -52,8 +52,19 @@ def _get(caminho: str, chave_api: str = "", **params) -> dict:
     k = chave_api or CHAVE
     if k:
         headers["X-API-Key"] = k
-    r = httpx.get(f"{API}{caminho}", headers=headers, timeout=30,
-                  params={k_: v for k_, v in params.items() if v not in (None, "", 0)})
+    # ★ QUERY STRING MONTADA À MÃO (correção). O httpx NÃO concatena `params=`
+    # com a query que já está na URL: ele a DESCARTA e usa só `params` — e com
+    # `params={}` descarta a query e não põe nada no lugar. Como as rotas de
+    # `fatos_contabeis` e `screener` passam os parâmetros dentro do próprio
+    # `caminho`, tudo era silenciosamente perdido: o screener respondia o
+    # cardápio (200, "adicione ao menos um filtro") e `fatos_contabeis`
+    # ignorava `trimestral`. Por isso juntamos as duas partes aqui e não
+    # passamos `params=` nenhum.
+    limpos = {k_: v for k_, v in params.items() if v not in (None, "", 0)}
+    url = f"{API}{caminho}"
+    if limpos:
+        url += ("&" if "?" in url else "?") + str(httpx.QueryParams(limpos))
+    r = httpx.get(url, headers=headers, timeout=30)
     if r.status_code == 401:
         return {"erro": "chave de API ausente ou inativa",
                 "como_resolver": f"Crie uma chave grátis em {API}/chave-gratis?de=mcp ou assine "

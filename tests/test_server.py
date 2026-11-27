@@ -88,6 +88,38 @@ def test_screener_pede_recibo_e_as_of_so_quando_pedido(chamadas):
     assert chamadas[0][1] == "k"
 
 
+def test_query_que_ja_esta_no_caminho_chega_na_url_final(monkeypatch):
+    """O httpx descarta a query da URL quando `params=` é passado.
+
+    `fatos_contabeis` e `screener` montam os parâmetros dentro do próprio
+    caminho; com `params=` no `httpx.get` eles eram perdidos em silêncio — o
+    screener devolvia o cardápio e `trimestral` era ignorado. Aqui olhamos a
+    URL que sai de verdade, não o que a ferramenta passa para `_get`.
+    """
+    urls = []
+
+    class R:
+        status_code = 200
+
+        @staticmethod
+        def json():
+            return {"ok": True}
+
+        @staticmethod
+        def raise_for_status():
+            return None
+
+    monkeypatch.setattr(server.httpx, "get", lambda url, **k: (urls.append(str(url)), R())[1])
+
+    server.screener({"roic_min": 0.15, "dl_ebitda_max": 2})
+    server.fatos_contabeis("WEGE3", trimestral=True)
+    server._get("/empresas/WEGE3/precos", de="2024-01-02", ate=None)
+
+    assert "?roic_min=0.15&dl_ebitda_max=2&limite=100" in urls[0], urls[0]
+    assert urls[1].endswith("/empresas/WEGE3/fatos?trimestral=true"), urls[1]
+    assert urls[2].endswith("/empresas/WEGE3/precos?de=2024-01-02"), urls[2]
+
+
 def test_mensagem_de_chave_aponta_para_a_chave_gratis_marcada(monkeypatch):
     class R:
         status_code = 401

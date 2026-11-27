@@ -20,7 +20,7 @@
       ]
     }
   ],
-  "version": "1.9.3",
+  "version": "1.9.4",
   "repository": {
     "url": "https://github.com/Val7h/dados-b3-mcp",
     "source": "github"
@@ -34,7 +34,7 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "ghcr.io/val7h/dados-b3-mcp:1.9.3",
+      "identifier": "ghcr.io/val7h/dados-b3-mcp:1.9.4",
       "transport": {
         "type": "stdio"
       },
